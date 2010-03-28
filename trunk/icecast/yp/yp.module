@@ -1,0 +1,38 @@
+<?php
+// $Id: yp.module,v 1.1.2.6 2008/09/03 21:39:47 mfb Exp $
+
+/**
+ * Implementation of hook_menu().
+ */
+function yp_menu() {
+  $items = array();
+  $items['yp/cgi'] = array(
+    'page callback' => 'yp_cgi',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'yp.cgi.inc',
+  );
+  $items['admin/settings/yp'] = array(
+    'title' => 'YP directory',
+    'description' => 'Configure YP directory settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('yp_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'yp.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Cleanup stale YP entries (not touched within past five minutes).
+ */
+function yp_cron() {
+  db_query("DELETE FROM {yp_stream} WHERE %d - last_touch > %d", time(), 300);
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function yp_views_api() {
+  return array('api' => 2);
+}

@@ -1,0 +1,5 @@
+; //$Id:
+name = "jQuery Heartbeat"
+description = "Drupal module wrapper for the jQuery Heartbeat plug-in by Jason Levine (and customized by A J Richards)"
+package = "User Interface"
+core = 6.x

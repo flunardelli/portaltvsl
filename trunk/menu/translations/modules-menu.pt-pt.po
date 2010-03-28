@@ -1,0 +1,625 @@
+# $Id: modules-menu.po,v 1.1.2.3 2009/02/03 23:02:17 borfast Exp $
+#
+# Portuguese translation of Drupal (modules/menu/menu.module)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: menu.module,v 1.100.2.1 2007/07/26 19:16:45 drumm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2009-02-03 23:01+0100\n"
+"Last-Translator: Raul Pedro Santos <borfast@yahoo.com>\n"
+"Language-Team: Portuguese (Portugal) <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: modules/menu/menu.admin.inc:54
+msgid "There are no menu items yet."
+msgstr "Não existem itens de menu ainda."
+
+#: modules/menu/menu.admin.inc:72 modules/menu/menu.module:235
+msgid "disabled"
+msgstr "inactivo"
+
+#: modules/menu/menu.admin.inc:104
+msgid "reset"
+msgstr "reiniciar"
+
+#: modules/menu/menu.admin.inc:175
+msgid "Menu item"
+msgstr "Item de menu"
+
+#: modules/menu/menu.admin.inc:177;299
+msgid "Expanded"
+msgstr "Expandido"
+
+#: modules/menu/menu.admin.inc:230 modules/menu/menu.module:358
+msgid "Menu settings"
+msgstr "Configurações de menu"
+
+#: modules/menu/menu.admin.inc:260
+msgid ""
+"The path this menu item links to. This can be an internal Drupal path such "
+"as %add-node or an external URL such as %drupal. Enter %front to link to the "
+"front page."
+msgstr ""
+"O caminho para o qual este item de menu liga. Poderá ser um caminho interno "
+"do Drupal como por exemplo %add-node ou um URL externo como por exemplo %"
+"drupal. Para uma ligação para página principal coloque %front."
+
+#: modules/menu/menu.admin.inc:279 modules/menu/menu.module:385
+msgid "Menu link title"
+msgstr "Título da ligação do menu"
+
+#: modules/menu/menu.admin.inc:281
+msgid ""
+"The link text corresponding to this item that should appear in the menu."
+msgstr ""
+"O texto da ligação que corresponde a este item que deverá aparecer no menu."
+
+#: modules/menu/menu.admin.inc:289
+msgid "The description displayed when hovering over a menu item."
+msgstr "A descrição exibida quando se passa por cima do menu item."
+
+#: modules/menu/menu.admin.inc:295
+msgid "Menu items that are not enabled will not be listed in any menu."
+msgstr ""
+"Os itens de menu que não estejam activos não serão listados em qualquer menu."
+
+#: modules/menu/menu.admin.inc:301
+msgid ""
+"If selected and this menu item has children, the menu will always appear "
+"expanded."
+msgstr ""
+"Se seleccionado e este menu possuir filhos, o menu irá sempre ser exibido "
+"sob a forma expandida."
+
+#: modules/menu/menu.admin.inc:315 modules/menu/menu.module:401
+msgid ""
+"The maximum depth for an item and all its children is fixed at !maxdepth. "
+"Some menu items may not be available as parents if selecting them would "
+"exceed this limit."
+msgstr ""
+"A profundidade máxima de um item e de todos os seus filhos é fixada em !"
+"maxdepth. Alguns itens do menu podem não estar disponíveis como pais se "
+"seleccionando-os, excede este limite."
+
+#: modules/menu/menu.admin.inc:323 modules/menu/menu.module:411
+msgid ""
+"Optional. In the menu, the heavier items will sink and the lighter items "
+"will be positioned nearer the top."
+msgstr ""
+"Opcional. No menu, os itens mais pesados afundam-se e os itens mais leves "
+"são posicionados próximo do topo."
+
+#: modules/menu/menu.admin.inc:379 modules/menu/menu.module:302
+msgid "There was an error saving the menu link."
+msgstr "Ocorreu um erro a gravar a ligação do menu."
+
+#: modules/menu/menu.admin.inc:403
+msgid "Menu name"
+msgstr "Nome do menu"
+
+#: modules/menu/menu.admin.inc:405
+msgid ""
+"The machine-readable name of this menu. This text will be used for "
+"constructing the URL of the <em>menu overview</em> page for this menu. This "
+"name must contain only lowercase letters, numbers, and hyphens, and must be "
+"unique."
+msgstr ""
+"O nome de sistema deste menu. Este texto será utilizado para construir o URL "
+"da página de <em>resumo do menu</em> para este menu. Este nome deve conter "
+"apenas letras, números e hífens, e tem que ser único."
+
+#: modules/menu/menu.admin.inc:460
+msgid "Are you sure you want to delete the custom menu %title?"
+msgstr "Tem a certeza que pretende eliminar o menu personalizado %title?"
+
+#: modules/menu/menu.admin.inc:492
+msgid "The custom menu %title has been deleted."
+msgstr "O menu personalizado %title foi eliminado."
+
+#: modules/menu/menu.admin.inc:502
+msgid ""
+"The menu name may only consist of lowercase letters, numbers, and hyphens."
+msgstr "O nome do menu só pode conter letras minúsculas, números e hífens."
+
+#: modules/menu/menu.admin.inc:512
+msgid "The menu already exists."
+msgstr "O menu já existe."
+
+#: modules/menu/menu.admin.inc:564
+msgid "Are you sure you want to delete the custom menu item %item?"
+msgstr ""
+"Tem a certeza que pretende eliminar o item de menu personalizado %item ?"
+
+#: modules/menu/menu.admin.inc:574
+msgid "The menu item %title has been deleted."
+msgstr "O item de menu %title foi eliminado."
+
+#: modules/menu/menu.admin.inc:584
+msgid "Are you sure you want to reset the item %item to its default values?"
+msgstr ""
+"Tem a certeza que pretende reiniciar o item %item para o seu valor padrão?"
+
+#: modules/menu/menu.admin.inc:584
+msgid "Any customizations will be lost. This action cannot be undone."
+msgstr ""
+"Quaisquer personalizações serão perdidas. Esta acção não pode ser revertida."
+
+#: modules/menu/menu.admin.inc:593
+msgid "The menu item was reset to its default settings."
+msgstr "O item de menu foi reinicializado para as suas opções padrão."
+
+#: modules/menu/menu.admin.inc:603
+msgid ""
+"The menu module allows on-the-fly creation of menu links in the content "
+"authoring forms. The following option sets the default menu in which a new "
+"link will be added."
+msgstr ""
+"O módulo menu permite-lhe construir menus a partir dos formulários de "
+"criação de conteúdos. A seguinte opção configura o menu por defeito em que "
+"uma nova ligação será adicionada."
+
+#: modules/menu/menu.admin.inc:609
+msgid "Default menu for content"
+msgstr "Menu por defeito para o conteúdo"
+
+#: modules/menu/menu.admin.inc:612
+msgid ""
+"Choose the menu to be the default in the menu options in the content "
+"authoring form."
+msgstr ""
+"Escolha o menu que estará por defeito nas opções de menu no formulário de "
+"criação de conteúdo."
+
+#: modules/menu/menu.admin.inc:616
+msgid "No primary links"
+msgstr "Não existem ligações primárias"
+
+#: modules/menu/menu.admin.inc:619
+msgid "Source for the primary links"
+msgstr "Fonte para as ligações primárias"
+
+#: modules/menu/menu.admin.inc:623
+msgid "Select what should be displayed as the primary links."
+msgstr "Seleccione o menu que deve ser exibido como as ligações primárias."
+
+#: modules/menu/menu.admin.inc:626
+msgid "No secondary links"
+msgstr "Não existem ligações secundárias"
+
+#: modules/menu/menu.admin.inc:629
+msgid "Source for the secondary links"
+msgstr "Fonte para as ligações secundárias"
+
+#: modules/menu/menu.admin.inc:633
+msgid ""
+"Select what should be displayed as the secondary links. You can choose the "
+"same menu for secondary links as for primary links (currently %primary). If "
+"you do this, the children of the active primary menu link will be displayed "
+"as secondary links."
+msgstr ""
+"Seleccione o menu que deve ser exibido como as ligações secundárias. Pode "
+"escolher o mesmo menu para ligações secundárias como para ligações primárias "
+"(actualmente %primary). Se fizer isso, os filhos da ligação primária activa "
+"serão exibidos como ligações secundárias."
+
+#: modules/menu/menu.admin.inc:493
+msgid "Deleted custom menu %title and all its menu items."
+msgstr "Eliminado o menu personalizado %title e todos os seus itens de menu."
+
+#: modules/menu/menu.admin.inc:575
+msgid "Deleted menu item %title."
+msgstr "Eliminado item de menu %title."
+
+#: modules/menu/menu.admin.inc:457
+msgid ""
+"<strong>Warning:</strong> There is currently 1 menu item in %title. It will "
+"be deleted (system-defined items will be reset)."
+msgid_plural ""
+"<strong>Warning:</strong> There are currently @count menu items in %title. "
+"They will be deleted (system-defined items will be reset)."
+msgstr[0] ""
+"<strong>Aviso:</strong> Existe actualmente 1 item de menu em %title. Ele "
+"será eliminado (os itens definidos pelo sistema serão restaurados)."
+msgstr[1] ""
+"<strong>Aviso:</strong> Existem actualmente @count itens de menu em %title. "
+"Eles serão eliminados (os itens definidos pelo sistema serão restaurados)."
+
+#: modules/menu/menu.admin.inc:505
+msgid "The menu name can't be longer than 1 character."
+msgid_plural "The menu name can't be longer than @count characters."
+msgstr[0] "O nome do menu não pode ser mais longo do que 1 caracter."
+msgstr[1] "O nome do menu não pode ser mais longo do que @count caracteres."
+
+#: modules/menu/menu.module:21
+msgid ""
+"The menu module provides an interface to control and customize Drupal's "
+"powerful menu system. Menus are a hierarchical collection of links, or menu "
+"items, used to navigate a website, and are positioned and displayed using "
+"Drupal's flexible block system. By default, three menus are created during "
+"installation: <em>Navigation</em>, <em>Primary links</em>, and <em>Secondary "
+"links</em>. The <em>Navigation</em> menu contains most links necessary for "
+"working with and navigating your site, and is often displayed in either the "
+"left or right sidebar. Most Drupal themes also provide support for "
+"<em>Primary links</em> and <em>Secondary links</em>, by displaying them in "
+"either the header or footer of each page. By default, <em>Primary links</em> "
+"and <em>Secondary links</em> contain no menu items but may be configured to "
+"contain custom menu items specific to your site."
+msgstr ""
+"O módulo do menu providencia uma interface para controlar e personalizar o "
+"poderoso sistema de menus do Drupal. Os menus são uma colecção hierárquica "
+"de ligações, ou de itens de menu, utilizados para navegar num site, e são "
+"posicionados e exibidos utilizando o sistema flexível de blocos do Drupal. "
+"Por defeito, três menus são criados durante a instalação: <em>Navegação</"
+"em>, <em>Ligações primárias</em>, e <em>Ligações secundárias</em>. O menu "
+"<em>Navegação</em> contém grande parte das ligações necessárias para "
+"trabalhar e navegar no seu site, e é frequentemente exibido na barra "
+"esquerda ou direita. A maioria dos temas do Drupal suporta as <em>Ligações "
+"primárias</em> e <em>Ligações secundárias</em>, exibindo-as no cabeçalho ou "
+"no rodapé de cada página. Por defeito, as <em>Ligações primárias</em> e "
+"<em>Ligações secundárias</em> não contêm itens de menu, mas pode ser "
+"configuradas para conter itens de menu personalizados específicamente para o "
+"seu site."
+
+#: modules/menu/menu.module:22
+msgid ""
+"The <a href=\"@menu\">menus page</a> displays all menus currently available "
+"on your site. Select a menu from this list to add or edit a menu item, or to "
+"rearrange items within the menu. Create new menus using the <a href=\"@add-"
+"menu\">add menu page</a> (the block containing a new menu must also be "
+"enabled on the <a href=\"@blocks\">blocks administration page</a>)."
+msgstr ""
+"A <a href=\"@menu\">página de menus</a> exibe todos os menus actualmente "
+"disponíveis no seu site. Seleccione um menu desta lista para adicionar ou "
+"editar um item de menu, ou para reorganizar os itens dentro do menu. Crie "
+"novos menus utilizando a página <a href=\"@add-menu\">Adicionar menu</a> (o "
+"bloco que contém o novo menu também tem que ser activado na <a href=\"@blocks"
+"\">página de administração de blocos</a>)."
+
+#: modules/menu/menu.module:23
+msgid ""
+"For more information, see the online handbook entry for <a href=\"@menu"
+"\">Menu module</a>."
+msgstr ""
+"Para informações adicionais consulte a entrada no manual em linha para o <a "
+"href=\"@menu\">módulo Menu</a>."
+
+#: modules/menu/menu.module:26
+msgid ""
+"Menus are a collection of links (menu items) used to navigate a website. The "
+"menus currently available on your site are displayed below. Select a menu "
+"from this list to manage its menu items."
+msgstr ""
+"Os menus são uma colecção de ligações (itens de menu) utilizados para "
+"navegar num site. Os menus disponíveis actualmente no seu site são exibidos "
+"abaixo. Seleccione um menu desta lista para controlar seus itens de menu."
+
+#: modules/menu/menu.module:28
+msgid ""
+"Enter the name for your new menu. Remember to enable the newly created block "
+"in the <a href=\"@blocks\">blocks administration page</a>."
+msgstr ""
+"Introduza o nome para o seu novo menu. Lembre-se de que é necessário activar "
+"o novo bloco em <a href=\"@blocks\">página de administração de blocos</a>."
+
+#: modules/menu/menu.module:30
+msgid ""
+"To rearrange menu items, grab a drag-and-drop handle under the <em>Menu "
+"item</em> column and drag the items (or group of items) to a new location in "
+"the list. (Grab a handle by clicking and holding the mouse while hovering "
+"over a handle icon.) Remember that your changes will not be saved until you "
+"click the <em>Save configuration</em> button at the bottom of the page."
+msgstr ""
+"Para reorganizar os itens de menu, agarre o manípulo <em>drag-and-drop</em> "
+"sob a coluna <em>Item de menu</em> e arraste-o para uma nova posição na "
+"lista. (Agarre um manípulo, clicando e segurando o botão do rato enquanto "
+"passa sobre o ícone do manípulo.) Lembre-se de que as suas alterações não "
+"serão gravadas até clicar no botão <em>Gravar Blocos</em> no fundo da página."
+
+#: modules/menu/menu.module:32
+msgid "Enter the title and path for your new menu item."
+msgstr "Insira o título e o caminho para o novo item de menu."
+
+#: modules/menu/menu.module:372
+msgid "Delete this menu item."
+msgstr "Eliminar este item de menu."
+
+#: modules/menu/menu.module:387
+msgid ""
+"The link text corresponding to this item that should appear in the menu. "
+"Leave blank if you do not wish to add this post to the menu."
+msgstr ""
+"O texto da ligação que corresponde a este item que deverá aparecer no menu. "
+"Deixe o espaço em branco se não pretende adicionar esta entrada ao menu."
+
+#: modules/menu/menu.module:40
+msgid "administer menu"
+msgstr "administrar menu"
+
+#: modules/menu/menu.module:48
+msgid "Menus"
+msgstr "Menus"
+
+#: modules/menu/menu.module:49
+msgid ""
+"Control your site's navigation menu, primary links and secondary links. as "
+"well as rename and reorganize menu items."
+msgstr ""
+"Controle o menu de navegação do site, as ligações principais e secundárias, "
+"bem como, altere o nome e organização dos itens de menu."
+
+#: modules/menu/menu.module:57
+msgid "List menus"
+msgstr "Listar menus"
+
+#: modules/menu/menu.module:63
+msgid "Add menu"
+msgstr "Adicionar menu"
+
+#: modules/menu/menu.module:78
+msgid "Customize menu"
+msgstr "Personalizar menu"
+
+#: modules/menu/menu.module:88
+msgid "List items"
+msgstr "Listar itens"
+
+#: modules/menu/menu.module:94
+msgid "Add item"
+msgstr "Adicionar item ao menu"
+
+#: modules/menu/menu.module:101
+msgid "Edit menu"
+msgstr "Editar menu"
+
+#: modules/menu/menu.module:108
+msgid "Delete menu"
+msgstr "Eliminar menu"
+
+#: modules/menu/menu.module:115
+msgid "Edit menu item"
+msgstr "Editar item de menu"
+
+#: modules/menu/menu.module:122
+msgid "Reset menu item"
+msgstr "Reiniciar o item de menu"
+
+#: modules/menu/menu.module:129
+msgid "Delete menu item"
+msgstr "Eliminar o item de menu"
+
+#: modules/menu/menu.install:31
+msgid ""
+"Holds definitions for top-level custom menus (for example, Primary Links)."
+msgstr ""
+"Detém as definições dos menus personalizados de nível topo (por exemplo, "
+"Ligações Primárias)."
+
+#: modules/menu/menu.install:38
+msgid ""
+"Primary Key: Unique key for menu. This is used as a block delta so length is "
+"32."
+msgstr ""
+"Chave Primária: Chave única para o menu. Isto é usado como o delta do bloco "
+"por isso o comprimento é 32."
+
+#: modules/menu/menu.install:45
+msgid "Menu title; displayed at top of block."
+msgstr "Título do menu; exibido no topo do bloco."
+
+#: modules/menu/menu.install:50
+msgid "Menu description."
+msgstr "Descrição do menu."
+
+#: (duplicate) modules/menu/menu.install:12
+msgid ""
+"The navigation menu is provided by Drupal and is the main interactive menu "
+"for any site. It is usually the only menu that contains personalized links "
+"for authenticated users, and is often not even visible to anonymous users."
+msgstr ""
+"O menu de navegação é fornecido pelo Drupal e é o principal menu interactivo "
+"para qualquer site. Geralmente, é o único menu que contém as ligações "
+"personalizadas para utilizadores autenticados, e não é frequentemente "
+"visível para os utilizadores anónimos."
+
+#: (duplicate) modules/menu/menu.install:13
+msgid ""
+"Primary links are often used at the theme layer to show the major sections "
+"of a site. A typical representation for primary links would be tabs along "
+"the top."
+msgstr ""
+"As ligações primárias são utilizadas frequentemente no tema para exibir as "
+"secções principais de um site. Uma representação típica para as ligações "
+"primárias seria abas ao longo do topo da página."
+
+#: (duplicate) modules/menu/menu.install:14
+msgid ""
+"Secondary links are often used for pages like legal notices, contact "
+"details, and other secondary navigation items that play a lesser role than "
+"primary links"
+msgstr ""
+"As ligações secundárias são utilizadas frequentemente para páginas como "
+"avisos legais, detalhes do contacto, e outros itens secundários da navegação "
+"menos importantes do que as ligações primárias."
+
+#~ msgid ""
+#~ "<p>Menus are a collection of links (menu items) used to navigate a "
+#~ "website. The menu module provides an interface to control and customize "
+#~ "the powerful menu system that comes with Drupal. Menus are primarily "
+#~ "displayed as a hierarchical list of links using Drupal's highly flexible "
+#~ "<a href=\"@admin-block\">blocks</a> feature. Each menu automatically "
+#~ "creates a block of the same name. By default, new menu items are placed "
+#~ "inside a built-in menu labelled %navigation, but administrators can also "
+#~ "create custom menus.</p>\n"
+#~ "<p>Drupal themes generally provide out-of-the-box support for two menus "
+#~ "commonly labelled %primary-links and %secondary-links. These are sets of "
+#~ "links which are usually displayed in the header or footer of each page "
+#~ "(depending on the currently active theme). Any menu can be designated as "
+#~ "the primary or secondary links menu via the <a href=\"@menu-settings"
+#~ "\">menu settings page</a>.</p>\n"
+#~ "Menu administration tabs:\n"
+#~ "<ul>\n"
+#~ "  <li>On the administer menu page, administrators can \"edit\" to change "
+#~ "the title, description, parent or weight of a menu item. Under the "
+#~ "\"operations\" column, click on \"enable/disable\" to toggle a menu item "
+#~ "on or off. Only menu items which are enabled are displayed in the "
+#~ "corresponding menu block. Note that the default menu items generated by "
+#~ "the menu module cannot be deleted, only disabled.</li>\n"
+#~ "  <li>Use the \"add menu\" tab to submit a title for a new custom menu. "
+#~ "Once submitted, the menu will appear in a list toward the bottom of the "
+#~ "administer menu page underneath the main navigation menu. Under the menu "
+#~ "name there will be links to edit or delete the menu, and a link to add "
+#~ "new items to the menu.</li>\n"
+#~ "  <li>Use the \"add menu item\" tab to create new links in either the "
+#~ "navigation or a custom menu (such as a primary/secondary links menu). "
+#~ "Select the parent item to place the new link within an existing menu "
+#~ "structure. For top level menu items, choose the name of the menu in which "
+#~ "the link is to be added.</li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "<p>Os menus são uma colecção de ligações (itens de menu) utilizadas para "
+#~ "navegar num site. O módulo menu dá-lhe uma interface para controlar e "
+#~ "personalizar o sistema de menus do Drupal. Os menus são usados "
+#~ "principalmente como uma lista hierárquica de ligações utilizando a "
+#~ "funcionalidade de <a href=\"@admin-block\">blocos</a> do Drupal. Cada "
+#~ "menu automaticamente cria um bloco com o mesmo nome. Por defeito, novos "
+#~ "itens de menu são colocados dentro do menu com o nome  %navigation, mas "
+#~ "os administradores podem também criar menus personalizados.</p>\n"
+#~ "<p>Os temas do Drupal geralmente fornecem suporte para dois menus que dão "
+#~ "geralmente pelo nome de  %primary-links e %secondary-links. Estes são "
+#~ "conjuntos de ligações que são habitualmente exibidos no cabeçalho e "
+#~ "rodapé  de cada página (dependendo no tema actualmente activo). Qualquer "
+#~ "menu pode ser designado como links primários ou secundários usando <a "
+#~ "href=\"@menu-settings\">página de configuração de menu</a>.</p>\n"
+#~ "Separadores do menu de administração:\n"
+#~ "<ul>\n"
+#~ "  <li>Na página de administração de menus, os administradores podem "
+#~ "\"editar\" o título, descrição, pai e peso de um item de menu. Por "
+#~ "debaixo da coluna \"operações\", clique em \"activar/desactivar\" para "
+#~ "ligar/desligar um item de menu. Apenas itens de menu que estejam activos "
+#~ "serão exibidos no bloco de menus correspondente. Tenha em atenção que os "
+#~ "os itens padrão gerados pelo módulo de menu não podem ser eliminados, "
+#~ "apenas desactivados.</li>\n"
+#~ "  <li>Utilize o separador \"adicionar menu\" para configurar o título "
+#~ "para um novo menu personalizado. Uma vez configurado, o menu irá ser "
+#~ "exibido numa lista por debaixo da página de administração de menus, por "
+#~ "debaixo do menu de navegação principal. Por debaixo do nome do menu, "
+#~ "existirão ligações para editar ou eliminar o menu e uma ligação para "
+#~ "adicionar novos itens ao menu.</li>\n"
+#~ "  <li>Utilize o separador \"adicionar item de menu\" para criar novas "
+#~ "ligações no menu de navegação ou num menu personalizado (como as ligações "
+#~ "dos menus de ligações primárias/secundárias). Seleccione o item pai para "
+#~ "colocar a nova ligação numa estrutura de menus existente. Para itens de "
+#~ "menu de topo, escolha o nome do menu ao qual será adicionada a ligação.</"
+#~ "li>\n"
+#~ "</ul>"
+
+#~ msgid "Add menu item"
+#~ msgstr "Adicionar item de menu"
+
+#~ msgid "Disable menu item"
+#~ msgstr "Desactivar o item de menu"
+
+#~ msgid "Parent item"
+#~ msgstr "Item pai"
+
+#~ msgid "Check to delete this menu item."
+#~ msgstr "Seleccione para eliminar este item de menu."
+
+#~ msgid ""
+#~ "You may also <a href=\"@edit\">edit the advanced settings</a> for this "
+#~ "menu item."
+#~ msgstr ""
+#~ "Pode também <a href=\"@edit\">editar as opções de configuração avançada</"
+#~ "a> para este item de menu."
+
+#~ msgid "Primary and secondary links settings"
+#~ msgstr "Configuração das ligações primárias e secundárias"
+
+#~ msgid ""
+#~ "Primary and secondary links provide a navigational menu system which "
+#~ "usually (depending on your theme) appears at the top-right of the browser "
+#~ "window. The links displayed can be generated either from a custom list "
+#~ "created via the <a href=\"@menu\">menu administration</a> page or from a "
+#~ "built-in list of menu items such as the navigation menu links."
+#~ msgstr ""
+#~ "As ligações primárias e secundárias são um sistema de navegação, que, "
+#~ "dependendo do seu tema, são exibidas habitualmente no topo direito da "
+#~ "janela do seu programa de navegação. As ligações exibidas podem ser "
+#~ "geradas via uma lista personalizada criada utilizando o <a href=\"@menu"
+#~ "\">menu de administração</a> ou a partir de uma lista de itens de menu já "
+#~ "existente, como por exemplo as ligações de menu de navegação."
+
+#~ msgid "Menu containing primary links"
+#~ msgstr "O menu que contém as ligações primárias"
+
+#~ msgid "Menu containing secondary links"
+#~ msgstr "O menu que contém as ligações secundárias"
+
+#~ msgid ""
+#~ "If you select the same menu as primary links then secondary links will "
+#~ "display the appropriate second level of your navigation hierarchy."
+#~ msgstr ""
+#~ "Se seleccionar o mesmo menu que as ligações primárias, então as ligações "
+#~ "secundárias irão exibir o segundo nível correspondente da sua hierarquia "
+#~ "de navegação."
+
+#~ msgid "Content authoring form settings"
+#~ msgstr "Configuração do formulário de criação de conteúdos"
+
+#~ msgid "Show all menus"
+#~ msgstr "Exibir todos os menus"
+
+#~ msgid "Restrict parent items to"
+#~ msgstr "Restringir os itens pais a"
+
+#~ msgid ""
+#~ "Choose the menu to be made available in the content authoring form. Only "
+#~ "this menu item and its children will be shown."
+#~ msgstr ""
+#~ "Seleccione o menu que deverá ser disponibilizado no formulário de criação "
+#~ "de conteúdos. Apenas estes itens de menu e os seus filhos serão exibidos."
+
+#~ msgid "The name of the menu."
+#~ msgstr "O nome do menu."
+
+#~ msgid "Are you sure you want to delete the menu %item?"
+#~ msgstr "Tem a certeza que pretende eliminar o menu %item?"
+
+#~ msgid "Deleted menu %title."
+#~ msgstr "Eliminado menu %title."
+
+#~ msgid "Are you sure you want to disable the menu item %menu-item?"
+#~ msgstr "Tem a certeza que pretende desactivar o menu %item?"
+
+#~ msgid "Disable"
+#~ msgstr "Desactivar"
+
+#~ msgid "The menu item has been disabled."
+#~ msgstr "O item do menu foi desactivado."
+
+#~ msgid "The menu item %title has been updated."
+#~ msgstr "O item de menu %title foi actualizado."
+
+#~ msgid "The menu item %title has been added."
+#~ msgstr "O item de menu %title foi adicionado."
+
+#~ msgid "Added menu item %title."
+#~ msgstr "Adicionado item de menu %title."
+
+#~ msgid "No menu items defined."
+#~ msgstr "Não há itens de menu definidos."
+
+#~ msgid "disable"
+#~ msgstr "desactivar"
+
+#~ msgid "enable"
+#~ msgstr "activar"

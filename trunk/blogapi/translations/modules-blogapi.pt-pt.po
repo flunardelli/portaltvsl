@@ -1,0 +1,285 @@
+# $Id: modules-blogapi.po,v 1.1.2.1 2008/03/23 10:32:40 mcduarte Exp $
+#
+# Portuguese translation of Drupal (modules/blogapi/blogapi.module)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: blogapi.module,v 1.100.2.2 2007/07/26 19:16:45 drumm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2008-03-23 10:31-0000\n"
+"Last-Translator: Miguel Duarte <home@miguelduarte.net>\n"
+"Language-Team: Portuguese (Portugal) <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: modules/blogapi/blogapi.module:15
+msgid ""
+"The Blog API module allows your site's users to access and post to their "
+"blogs from external blogging clients. External blogging clients are "
+"available for a wide range of desktop operating systems, and generally "
+"provide a feature-rich graphical environment for creating and editing posts."
+msgstr ""
+"O módulo Blog API permite que os utilizadores do seu site acedam e publiquem "
+"nos seus blogues usando clientes externos de escrita em blogues. Estão "
+"disponíveis clientes externos para uma ampla gama de sistemas operativos e "
+"geralmente estes clientes proporcionam uma ambiente gráfico rico em "
+"funcionalidades para criar e editar entradas nos blogues."
+
+#: modules/blogapi/blogapi.module:16
+msgid ""
+"<a href=\"@ecto-link\">Ecto</a>, a blogging client available for both Mac OS "
+"X and Microsoft Windows, can be used with Blog API. Blog API also supports "
+"<a href=\"@blogger-api\">Blogger API</a>, <a href=\"@metaweblog-api"
+"\">MetaWeblog API</a>, and most of the <a href=\"@movabletype-api\">Movable "
+"Type API</a>. Blogging clients and other services (e.g. <a href=\"@flickr"
+"\">Flickr's</a> \"post to blog\") that support these APIs may also be "
+"compatible."
+msgstr ""
+"<a href=\"@ecto-link\">Ecto</a>, um cliente de escrita em blogue para Mac OS "
+"X e Microsoft Windows pode ser usado com o módulo Blog API. O Blog API "
+"também suporta programas que usem a <a href=\"@blogger-api\">Blogger API</"
+"a>, a <a href=\"@metaweblog-api\">MetaWeblog API</a>, e a maior parte dos "
+"programas concebidos para a <a href=\"@movabletype-api\">Movable Type API</"
+"a>. Clientes de blogue para outros serviços (ex: <a href=\"@flickr"
+"\">Flickr's</a> \"post to blog\") que suportam estas APIs também poderão ser "
+"compatíveis."
+
+#: modules/blogapi/blogapi.module:17
+msgid ""
+"Select the content types available to external clients on the <a href="
+"\"@blogapi-settings\">Blog API settings page</a>. If supported and "
+"available, each content type will be displayed as a separate \"blog\" by the "
+"external client."
+msgstr ""
+"Seleccionar os tipos de conteúdo que irão estar disponíveis a clientes "
+"externos na <a href=\"@blogapi-settings\">pagina de configurações do módulo "
+"Blog API</a>."
+
+#: modules/blogapi/blogapi.module:18
+msgid ""
+"For more information, see the online handbook entry for <a href=\"@blogapi"
+"\">Blog API module</a>."
+msgstr ""
+"Para informações adicionais veja a entrada em linha no manual para o <a href="
+"\"@blogapi\">módulo Blog API</a>."
+
+#: modules/blogapi/blogapi.module:39
+msgid "Returns a list of blogs to which an author has posting privileges."
+msgstr ""
+"Devolve uma lista de blogues para os quais um autor tem privilégios de "
+"colocar entradas."
+
+#: modules/blogapi/blogapi.module:44
+msgid "Returns information about an author in the system."
+msgstr "Devolve a informação acerca de um autor no sistema."
+
+#: modules/blogapi/blogapi.module:49;74
+msgid "Creates a new post, and optionally publishes it."
+msgstr "Cria uma nova entrada, e opcionalmente publica a mesma."
+
+#: modules/blogapi/blogapi.module:54
+msgid "Updates the information about an existing post."
+msgstr "Actualiza a informação existente acerca de uma entrada existente."
+
+#: modules/blogapi/blogapi.module:59;84
+msgid "Returns information about a specific post."
+msgstr "Devolve informação acerca de uma entrada especifica."
+
+#: modules/blogapi/blogapi.module:64
+msgid "Deletes a post."
+msgstr "Eliminar uma entrada."
+
+#: modules/blogapi/blogapi.module:69;99
+msgid "Returns a list of the most recent posts in the system."
+msgstr "Devolve uma lista das entradas mais recentes no sistema."
+
+#: modules/blogapi/blogapi.module:79
+msgid "Updates information about an existing post."
+msgstr "Actualiza a informação acerca de uma entrada existente."
+
+#: modules/blogapi/blogapi.module:89
+msgid "Uploads a file to your webserver."
+msgstr "Carrega um ficheiro no seu servidor web."
+
+#: modules/blogapi/blogapi.module:94;114
+msgid "Returns a list of all categories to which the post is assigned."
+msgstr "Devolve uma lista de todas as categorias atribuídas à entrada."
+
+#: modules/blogapi/blogapi.module:104
+msgid ""
+"Returns a bandwidth-friendly list of the most recent posts in the system."
+msgstr ""
+"Devolve uma lista das entradas mais recentes no sistema (consumindo poucos "
+"recursos de largura de banda)."
+
+#: modules/blogapi/blogapi.module:109
+msgid "Returns a list of all categories defined in the blog."
+msgstr "Devolve uma lista de todas as categorias definidas no blogue."
+
+#: modules/blogapi/blogapi.module:119
+msgid "Sets the categories for a post."
+msgstr "Atribui as categorias para uma entrada."
+
+#: modules/blogapi/blogapi.module:124
+msgid "Retrieve information about the XML-RPC methods supported by the server."
+msgstr ""
+"Recupera a informação acerca dos métodos de XML-RPC suportados pelo servidor."
+
+#: modules/blogapi/blogapi.module:129
+msgid ""
+"Retrieve information about the text formatting plugins supported by the "
+"server."
+msgstr ""
+"Recupera a informação acerca dos plugins de formatação de texto suportados "
+"pelo servidor."
+
+#: modules/blogapi/blogapi.module:134
+msgid ""
+"Publish (rebuild) all of the static files related to an entry from your "
+"blog. Equivalent to saving an entry in the system (but without the ping)."
+msgstr ""
+"Publicar (reconstruir) todos os ficheiros estáticos relacionados com uma "
+"entrada no seu blogue. Equivalente a gravar uma entrada no sistema (mas sem "
+"o ping)."
+
+#: modules/blogapi/blogapi.module:216
+msgid "You do not have permission to create this type of post."
+msgstr "Não tem permissões para criar este tipo de entrada."
+
+#: modules/blogapi/blogapi.module:238;293
+msgid "Error storing post."
+msgstr "Erro ao gravar a entrada."
+
+#: modules/blogapi/blogapi.module:260;502
+msgid "You do not have permission to update this post."
+msgstr "Você não tem permissão para actualizar esta entrada."
+
+#: modules/blogapi/blogapi.module:378
+msgid "No file sent."
+msgstr "Nenhum ficheiro enviado."
+
+#: modules/blogapi/blogapi.module:382
+msgid "Error storing file."
+msgstr "Erro ao gravar o ficheiro."
+
+#: modules/blogapi/blogapi.module:497
+msgid "Invalid post."
+msgstr "Entrada inválida."
+
+#: modules/blogapi/blogapi.module:537
+msgid "You do not have permission to edit this blog."
+msgstr "Não tem permissões para editar este blogue."
+
+#: modules/blogapi/blogapi.module:541
+msgid "Wrong username or password."
+msgstr "Erro no nome ou senha."
+
+#: modules/blogapi/blogapi.module:564
+msgid "Enable for external blogging clients"
+msgstr "Activar para clientes externos de escrita de blogues"
+
+#: modules/blogapi/blogapi.module:568
+msgid ""
+"Select the content types available to external blogging clients via Blog "
+"API. If supported, each enabled content type will be displayed as a separate "
+"\"blog\" by the external client."
+msgstr ""
+"Seleccionar os tipos de conteúdo disponíveis a clientes externos de escrita "
+"de blogues via o módulo Blog API. Se suportado, cada tipo de conteúdo activo "
+"irá ser exibido como um \"blogue\" separado pelo cliente externo."
+
+#: modules/blogapi/blogapi.module:597;576
+msgid "RSD"
+msgstr "RSD"
+
+#: modules/blogapi/blogapi.module:715
+msgid ""
+"Blog API module is not configured to support the %type content type, or you "
+"don't have sufficient permissions to post this type of content."
+msgstr ""
+"O módulo Blog API não está configurado para suportar tipos de conteúdo %"
+"type, ou você não tem permissões suficientes para publicar esse tipo de "
+"conteúdo."
+
+#: modules/blogapi/blogapi.module:233
+msgid "@type: added %title using blog API."
+msgstr "@type: adicionado %title utilizando a Blogue API."
+
+#: modules/blogapi/blogapi.module:289
+msgid "@type: updated %title using Blog API."
+msgstr "@type: actualizado %title utilizando o módulo Blog API."
+
+#: modules/blogapi/blogapi.module:27
+msgid "administer content with blog api"
+msgstr "administrar conteúdos com o módulo Blog API."
+
+#: modules/blogapi/blogapi.module:583
+msgid "Configure the content types available to external blogging clients."
+msgstr ""
+"Configurar os tipos de conteúdo disponíveis para clientes externos de "
+"escrita em blogues."
+
+#: modules/blogapi/blogapi.module:0
+msgid "blogapi"
+msgstr "blogapi"
+
+#~ msgid ""
+#~ "The blog API module enables a post to be posted to a site via external "
+#~ "GUI applications. Many users prefer to use external tools to improve "
+#~ "their ability to read and post responses in a customized way. The blog "
+#~ "api provides users the freedom to use the blogging tools they want but "
+#~ "still have the blogging server of choice."
+#~ msgstr ""
+#~ "O módulo de Blogue API permite que uma entrada seja colocada através de "
+#~ "aplicações externas. Muitos utilizadores preferem usar ferramentas "
+#~ "externas para melhorar a sua habilidade de ler e afixar respostas de uma "
+#~ "forma personalizada. A Blogue API fornece aos utilizadores a liberdade "
+#~ "para usar as ferramentas de blogging que desejarem, mantendo o seu "
+#~ "servidor de blogue preferido."
+
+#~ msgid ""
+#~ "This module also allows site administrators to configure which content "
+#~ "types can be posted via the external applications. So, for instance, "
+#~ "users can post forum topics as well as blog posts. Where supported, the "
+#~ "external applications will display each content type as a separate \"blog"
+#~ "\"."
+#~ msgstr ""
+#~ "Este módulo permite aos administradores do site configurar que tipos de "
+#~ "conteúdo podem ser publicados via aplicações externas. Por exemplo, os "
+#~ "utilizadores podem publicar tópicos no fórum além de entradas no blogue. "
+#~ "Algumas aplicações externas indicarão cada tipo de conteúdo como um "
+#~ "\"blogue\" separado."
+
+#~ msgid ""
+#~ "You do not have permission to create the type of post you wanted to "
+#~ "create."
+#~ msgstr "Não tem permissão para criar o tipo de entrada que tentou criar."
+
+#~ msgid ""
+#~ "You either tried to edit somebody else's blog or you don't have "
+#~ "permission to edit your own blog."
+#~ msgstr ""
+#~ "Você está a tentar editar o blogue de outra pessoa ou não tem a "
+#~ "autorização para editar o seu próprio blogue."
+
+#~ msgid "Blog types"
+#~ msgstr "Tipos de blogue"
+
+#~ msgid ""
+#~ "Select the content types for which you wish to enable posting via "
+#~ "blogapi. Each type will appear as a different \"blog\" in the client "
+#~ "application (if supported)."
+#~ msgstr ""
+#~ "Seleccione os tipos de conteúdo para os quais deseja activar a publicação "
+#~ "via BlogueAPI. Cada tipo aparecerá como um \"blogue\" diferente na "
+#~ "aplicação cliente (se a aplicação suportar esta funcionalidade)."
+
+#~ msgid "Blog APIs"
+#~ msgstr "APIs do blogue"
