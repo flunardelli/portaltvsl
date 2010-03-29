@@ -1,0 +1,7 @@
+name = Lumea Video
+description = Extends video nodes.
+package = "Media"
+dependencies[] = video
+core = 6.x
+version = "6.x-0.1"
+

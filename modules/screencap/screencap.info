@@ -1,0 +1,7 @@
+; $Id$
+name = Screencap
+description = Create a image display block or page from captured screecaps. (Sponsored by ASL - Associação Software Livre)
+package = Media
+dependencies[] = jquery_heartbeat
+version = VERSION
+core = 6.x

@@ -1,0 +1,27 @@
+/**
+ * @file
+ * Contains css theming rules for video module and plugins
+ *
+ * @author Fabio Varesano <fvaresano at yahoo dot it>
+ * @author Heshan Wanigasooriya <heshan at heidisoft.com><heshanmw@gmail.com>
+ * @todo
+ * @version : $Id: video.css,v 1.2.4.2 2009/07/25 03:30:50 heshanmw Exp $
+ */
+
+.video_image_teaser {
+  float: left;
+  padding: 0.5em;
+}
+
+br.video_image_clear {
+  clear: both;
+}
+
+.video_image_view {
+  /* inser here rules for node page image */
+}
+
+.video-ffmpeg-helper-inprogress {
+  border: 1px solid red;
+  padding: .5em;
+}

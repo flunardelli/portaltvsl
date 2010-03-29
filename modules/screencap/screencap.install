@@ -1,0 +1,144 @@
+<?php
+// $Id:
+/**
+ * Implementation of hook_schema().
+ */
+
+ function screencap_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time.
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+
+    $screencap_directory = file_create_path() .'/screencap';
+    if (!file_check_directory($screencap_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+      if (!is_dir($screencap_directory)) {
+        $requirements['screencap_directory'] = array(
+          'title' => $t('Screencap Directory'),
+          'value' => $t('%p is not a directory or is not readable by the webserver.', array('%p' => $screencap_directory)),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+      elseif (!is_writable($screencap_directory)) {
+        $requirements['screencap_directory'] = array(
+          'title' => $t('Screencap Directory'),
+          'value' => $t('%p is not writeable by the webserver.', array('%p' => $screencap_directory)),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+      else {
+        $requirements['screencap_directory'] = array(
+          'title' => $t('Screencap Directory'),
+          'value' => $t('An unknown error occured.'),
+          'description' => $t('An unknown error occured trying to verify %p is a directory and is writable.', array('%p' => $screencap_directory)),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+    }
+
+    if (!is_writable(file_directory_temp())) {
+      $requirements['screencap_directory'] = array(
+        'title' => $t('Screencap Temp Directory'),
+        'value' => $t('%p is not writeable by the webserver.', array('%p' => file_directory_temp())),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+  return $requirements;
+}
+
+
+function screencap_schema() {
+  $schema['screencap'] = array(
+    'description' => t('Store screencap informations'),
+    'fields' => array(
+      'vid' => array(
+        'description' => t('Primary Key: {screencap}.vid of the screencap node'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => t('Node id, index to the {node}.nid'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),      
+      'refreshtime' => array(
+        'description' => t('Screencap refresh time'),
+        'type' => 'int',
+        'size' => 'small',
+	'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 10,
+      ),
+      'sourcedir' => array(
+        'description' => t('Screencap source dir'),
+        'type' => 'varchar',
+	'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'imagewidth' => array(
+        'description' => t('Screencap width'),
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'imageheight' => array(
+        'description' => t('Screencap height'),
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'transitioneffect' => array(
+        'description' => t('Load transition effect'),
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'alwaysreload' => array(
+        'description' => t('Force reload screencap every time'),
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+     'indexes' => array(
+     'nid' => array('nid'),
+    ),
+    'primary key' => array('vid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function screencap_install() {
+    drupal_install_schema('screencap');
+    variable_set('screencap_default_imagename', 'slide.jpg');
+    variable_set('screencap_default_debug', 0);
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function screencap_uninstall() {
+  drupal_uninstall_schema('screencap');
+  variable_del('screencap_default_imagename');
+  variable_del('screencap_default_debug');
+  
+}

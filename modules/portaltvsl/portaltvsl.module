@@ -1,0 +1,223 @@
+<?php
+// $Id: 
+
+/**
+ *  Implement hook_init().
+ */
+
+function portaltvsl_init() {
+	global $base_path;
+    $base = drupal_get_path('module', 'portaltvsl');	    
+	$file = '/cortado/cortado-ovt-stripped-0.6.0.jar';
+	define('PORTALTVSL_CORTADO_PATH', $base_path . $base .$file);
+    drupal_add_css(drupal_get_path('module', 'portaltvsl') .'/portaltvsl.css');
+}
+
+/**
+ * Implementation of hook_menu().
+ *
+ * @param $may_cache
+ *   boolean indicating whether cacheable menu items should be returned
+ *
+ * @return
+ *   array of menu information
+ */
+
+function portaltvsl_menu() {
+  global $user;  
+  $items = array();
+  $items['embed/%node'] = array(
+    'title' => 'Embed media',
+    'page callback' => 'portaltvsl_embed',
+    'page arguments' => array(1),
+	'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK);
+      
+  return $items;
+}
+
+function theme_portaltvsl_embed($element,$node){
+	global $base_url,$language;
+	
+	$videocontent = theme('portaltvsl_player',$element);	
+
+  	$output = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$language->language.'" lang="'.$language->language.'" dir="'.$language->language.'">
+	<head>
+	<title>embeded content</title>
+	'.drupal_get_html_head().'
+	'.drupal_get_css().'
+	</head>
+	<body class="embed">
+	<div class="content">  
+	<div id="video-media-embed" class="video-media-body">
+	'.$videocontent.'
+	</div>
+	<a href="'.$base_url.'" target="new"><img src="'.$base_url.'/themes/tvsl/images/logo-embed.png" border="0"/></a>  
+	<span id="video-label" style="width:'.$width.';font-size: 14px;font-weight: bold; vertical-align: top;line-height: 30px;">'.l($node->title,$node->path,array('target' => 'new')) .' '.$description.'</span>
+	</div>
+	</body>
+	</html>';
+
+	return $output;
+}
+
+function portaltvsl_embed($node) {
+  $output = '';   
+
+  if (in_array($node->type,array('video','aovivo'))) { 
+	global $base_url; 
+	global $base_path;
+	global $styles;
+	if ($node->type == 'aovivo'){
+	  $node->videox = $node->field_width[0]["value"];
+	  $node->videoy = $node->field_height[0]["value"];
+	  $width = $node->videox;
+	  $height = $node->videoy;
+	  $video_path = url($node->field_urlstream[0]["value"]);
+	  $snapshot = $base_url . '/themes/tvsl/images/tvsl-banner-logo.png';
+	  $autoplay = 'true';
+	  $description = '<span style="font-size: 10px">' .$node->field_aovivo_status[0]["value"] .( ($node->field_aovivodatetime[0]["value"]) ? ' - '. $node->field_aovivodatetime[0]["value"] : '').'</span>';
+	} else if ($node->type == 'video') {
+	  $video_path = url($node->current_video_upload_file->filepath);
+	  $width = '480';
+	  $width = ($node->videox) ? $node->videox : $width;
+	  $height = '360';
+	  $height = ($node->videoy) ? $node->videoy : $height;		  
+	  if ($node->iid) {
+  		$imagenode = node_load($node->iid);
+  		$snapshot = $base_url . '/' . $imagenode->images['snapshot'];
+	  } else {
+  		$snapshot = '';
+	  }
+	  $autoplay = 'false';
+	  $description = '';
+	} 
+
+	$element = new stdClass();
+    $element->width = $width;
+	$element->height = $height;
+	$element->poster = $snapshot;
+	$element->mediafile =  $video_path;
+	$element->showcontrols = true;
+	$element->autoplay = "$autoplay";
+	$element->statusheight = 30;
+	$element->autobuffer = true;  
+	
+	$output = theme('portaltvsl_embed',$element,$node);	
+
+  }
+  print $output;
+}
+
+
+/**
+ * Implementation of CCK's hook_field_formatter_info().
+ */
+function portaltvsl_field_formatter_info() {
+  return array(
+    'audio_player' => array(
+      'label' => t('Audio player'),
+      'field types' => array('filefield'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+      'description' => t('Displays all kinds of files with icon and audio player.'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function portaltvsl_theme() {
+  return array(
+    'portaltvsl_formatter_audio_player' => array(
+      'arguments' => array('element' => NULL),
+      'file' => 'portaltvsl_formatter.inc',
+    ),
+    'portaltvsl_file' => array(
+      'arguments' => array('file' => NULL),
+      'file' => 'portaltvsl_formatter.inc',
+    ),
+	'portaltvsl_player' => array(
+      'arguments' => array('element' => NULL),
+    ),
+	'portaltvsl_embed' => array(
+      'arguments' => array('element' => NULL, 'node' => NULL),
+    ),
+	'portaltvsl_player_embed_toolbar'	=> array(
+      'arguments' => array('node' => NULL),
+    ),
+  );
+}
+
+function theme_portaltvsl_player_embed_toolbar($element,$node) {
+  global $base_path,$base_url;
+  drupal_add_js('rsl/popup/libs/jquery.hoverIntent.minified.js');
+  drupal_add_js('rsl/popup/libs/bgiframe_2.1.1/jquery.bgiframe.min.js');
+  drupal_add_js('rsl/popup/libs/excanvas_r3/excanvas.js');
+  drupal_add_js('rsl/popup/jquery.bt.min.js');
+  drupal_add_js('rsl/popup/libs/jquery.easing.1.3.js');
+  drupal_add_css('rsl/radiosl.css');
+  $addtoany = _addtoany_create_button($node);
+  $embed_str = '<iframe id="player-base" src="' . $base_url .'/embed/'. $node->nid . '" width="'.($element->width + 2).'" height="'.($element->height + 46).'" align="right" frameborder="0" scrolling="no"></iframe>';
+  //$b = '$(\'#player-embed a:first-child\').bt(\'<textarea style="font-size:10px;height:60px;width:260px;border:0;"  onFocus="this.select()" >'.$embed_str.'</textarea>\', {width: 260, fill: \'white\',cornerRadius: 20,padding:10, strokeWidth: 1,trigger: \'click\', positions: \'right\'});';
+  $b = '$(\'#player-embed a:first-child\').bt(\'<textarea style="font-size:10px;height:60px;width:260px;border:0;" onFocus="this.select()">'.$embed_str.'</textarea>\',
+  {
+	positions: \'top\',
+    trigger: \'click\',
+	width: 260,
+	centerPointX: .9,
+	spikeLength: 15,
+	spikeGirth: 40,
+	padding: 15,
+	cornerRadius: 25,
+	fill: \'#FFF\',
+	strokeStyle: \'#ABABAB\',
+	strokeWidth: 1
+  });';
+
+  $r = '$(document).ready(function() { '.$b.' })';
+  drupal_add_js($r,'inline');
+  $output = '<div id="player-embed" style="color:#FFFFFF;display:inline-block;font-size:12px;padding-left:3px;margin-top:0;text-align:left;vertical-align:bottom;width:30px;" >
+  <a href="javascript:void(0);" style="color: #fff;"><img src="'.$base_path.'themes/tvsl/images/embed_16_16.png" border="0"></a>'.$addtoany.'</div>';
+  return $output;  
+}
+
+function theme_portaltvsl_player($element) {
+  $output = '<video width="'.$element->width.'" height="'.$element->height.'" '.(($element->autoplay == 'true') ? 'autoplay' : '').' '.(($element->autobuffer == 'true') ? 'autobuffer' : '').' '.(($element->showcontrols == 'true') ? 'controls' : '') .' src="'.$element->mediafile.'" 
+  poster="'.$element->poster.'" durationHint="'.$element->duration.'">
+	<object id="portaltvsl-audio-player'.(($element->playerid) ? $element->playerid : '').'" width="'.$element->width.'" height="'.$element->height.'" codebase="http://java.sun.com/products/plugin/autodl/jinstall-1_4_2-windows-i586.cab#Version=1,4,2,0" classid="clsid:CAFEEFAC-0014-0002-0000-ABCDEFFEDCBA">
+	  <param value="com.fluendo.player.Cortado.class" name="code"/>
+	  <param value="'.PORTALTVSL_CORTADO_PATH.'" name="codebase"/>
+	  <param value="'.PORTALTVSL_CORTADO_PATH.'" name="archive"/>
+	  <param value="application/x-java-applet;jpi-version=1.4.2" name="type"/>
+	  <param name="url" value="'.$element->mediafile.'">
+	  <param name="BufferSize" value="4096">
+	  <param name="BufferHigh" value="25">
+	  <param name="BufferLow" value="5">
+	  <param name="statusHeight" value="'.(($element->statusheight) ? $element->statusheight : 30).'">
+	  <param name="autoPlay" value="'.(($element->autoplay == 'true') ? 'true' : 'false').'"/>
+	  <comment>
+		<applet id="portaltvsl-audio-player-applet'.(($element->playerid) ? $element->playerid : '').'" width="'.$element->width.'" height="'.$element->height.'" archive="'.PORTALTVSL_CORTADO_PATH.'" 
+		  codebase="'.PORTALTVSL_CORTADO_PATH.'" code="com.fluendo.player.Cortado.class">
+		  <param name="url" value="'.$element->mediafile.'"/>
+		  <param name="BufferSize" value="4096"/>
+		  <param name="BufferHigh" value="25"/>
+		  <param name="BufferLow" value="5"/>
+		  <param name="autoPlay" value="'.(($element->autoplay == 'true') ? 'true' : 'false').'"/>
+		  <param name="statusHeight" value="(($element->statusheight) ? $element->statusheight : 30)">
+	    </applet>
+	  </comment>  
+	</object>	
+  </video>';
+  return $output;
+}
+
+function _portaltvsl_encode_full_url(&$url) { 
+    $url = rawurlencode($url); 
+    $url = str_replace("%2F", "/", $url); 
+    $url = str_replace("%3A", ":", $url); 
+    return $url; 
+} 
+
