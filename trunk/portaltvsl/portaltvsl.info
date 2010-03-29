@@ -1,5 +1,0 @@
-; $Id: 
-name = Portal TVSL facilities
-description = Provides various multimedia content type facilities.
-package = Video
-core = 6.x

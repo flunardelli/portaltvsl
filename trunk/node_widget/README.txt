@@ -1,1 +1,0 @@
-$Id: README.txt,v 1.1 2010/02/09 12:27:12 antoniodemarco Exp $
