@@ -1,0 +1,248 @@
+# $Id: modules-translation.po,v 1.1.2.4 2008/09/28 09:54:24 seventhguardian Exp $
+#
+# LANGUAGE translation of Drupal (modules-translation)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  translation.pages.inc,v 1.2 2008/01/07 13:18:40 goba
+#  translation.module,v 1.23 2008/01/28 11:38:58 goba
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2008-09-28 10:53+0100\n"
+"Last-Translator: Renato Caldas <seventhguardian@gmail.com>\n"
+"Language-Team: Portuguese <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: Portugal\n"
+
+#: modules/translation/translation.pages.inc:41
+msgid "outdated"
+msgstr "ultrapassado"
+
+#: modules/translation/translation.pages.inc:50
+msgid "add translation"
+msgstr "adicionar tradução"
+
+#: modules/translation/translation.pages.inc:52
+msgid "Not translated"
+msgstr "Não traduzido"
+
+#: modules/translation/translation.pages.inc:57
+msgid "Translations of %title"
+msgstr "Tradução de %title"
+
+#: modules/translation/translation.module:34
+msgid ""
+"The content translation module allows content to be translated into "
+"different languages. Working with the <a href=\"@locale\">locale module</a> "
+"(which manages enabled languages and provides translation for the site "
+"interface), the content translation module is key to creating and "
+"maintaining translated site content."
+msgstr ""
+"O módulo de tradução de conteúdos permite que conteúdos sejam traduzidos "
+"para diferentes idiomas. O módulo de tradução de conteúdos, em conjunto com "
+"o <a href=\"@locale\">módulo locale</a> (o qual gere os idiomas activos e "
+"fornece a tradução da interface do site), é essencial para criar e manter "
+"conteúdos traduzidos."
+
+#: modules/translation/translation.module:35
+msgid "Configuring content translation and translation-enabled content types:"
+msgstr ""
+"Configurar tradução de conteúdos e tipos de conteúdo que suportam traduções:"
+
+#: modules/translation/translation.module:36
+msgid ""
+"Assign the <em>translate content</em> permission to the appropriate user "
+"roles at the <a href=\"@permissions\">Permissions configuration page</a>."
+msgstr ""
+"Atribua a permissão de <em>traduzir de conteúdos</em> aos grupos de "
+"utilizadores apropriados na <a href=\"@permissions\">página de configuração "
+"de Permissões</a>."
+
+#: modules/translation/translation.module:37
+msgid ""
+"Add and enable desired languages at the <a href=\"@languages\">Languages "
+"configuration page</a>."
+msgstr ""
+"Adicione e active os idiomas desejados na <a href=\"@languages\">página de "
+"configuração de Idiomas</a>."
+
+#: modules/translation/translation.module:38
+msgid ""
+"Determine which <a href=\"@content-types\">content types</a> should support "
+"translation features. To enable translation support for a content type, edit "
+"the type and at the <em>Multilingual support</em> drop down, select "
+"<em>Enabled, with translation</em>. (<em>Multilingual support</em> is "
+"located within <em>Workflow settings</em>.) Be sure to save each content "
+"type after enabling multilingual support."
+msgstr ""
+"Determine quais os <a href=\"@content-types\">tipos de conteúdo</a> que "
+"devem suportar as funcionalidades de tradução. Para activar suporte para "
+"traduções para um tipo de conteúdo, edite o tipo de conteúdo e, no selector "
+"<em>Suporte multi-idioma</em>, seleccione <em>Activo, com tradução</em> "
+"(<em>Suporte multi-idioma</em> está localizado dentro das <em>Configurações "
+"de processo de trabalho</em>.) Certifique-se de que grava cada tipo de "
+"conteúdo após activar o suporte multi-idioma."
+
+#: modules/translation/translation.module:39
+msgid "Working with translation-enabled content types:"
+msgstr "Trabalhar com tipos de conteúdo que suportam traduções:"
+
+#: modules/translation/translation.module:40
+msgid ""
+"Use the <em>Language</em> drop down to select the appropriate language when "
+"creating or editing posts."
+msgstr ""
+"Utilize o selector <em>Idioma</em> para seleccionar o idioma apropriado ao "
+"criar ou editar entradas."
+
+#: modules/translation/translation.module:41
+msgid ""
+"Provide new or edit current translations for existing posts via the "
+"<em>Translation</em> tab. Only visible while viewing a post as a user with "
+"the <em>translate content</em> permission, this tab allows translations to "
+"be added or edited using a specialized editing form that also displays the "
+"content being translated."
+msgstr ""
+"Insira novas traduções ou edite as traduções actuais de entradas existentes "
+"no separador <em>Tradução</em>. Apenas visível ao ver uma entrada como um "
+"utilizador com a permissão <em>traduzir conteúdos</em>, este separador "
+"permite adicionar ou editar traduções, utilizando um formulário de edição "
+"especializado, o qual também mostra o conteúdo a ser traduzido."
+
+#: modules/translation/translation.module:42
+msgid ""
+"Update translations as needed, so that they accurately reflect changes in "
+"the content of the original post. The translation status flag provides a "
+"simple method for tracking outdated translations. After editing a post, for "
+"example, select the <em>Flag translations as outdated</em> check box to mark "
+"all of its translations as outdated and in need of revision. Individual "
+"translations may be marked for revision by selecting the <em>This "
+"translation needs to be updated</em> check box on the translation editing "
+"form."
+msgstr ""
+"Actualizar traduções conforme necessário, de modo a que reflictam "
+"correctamente as alterações no conteúdo da entrada original. A marcação do "
+"estado da tradução providencia um modo simples para seguir traduções "
+"desactualizadas. Após editar uma entrada, por exemplo, marque a caixa de "
+"selecção <em>Marcar traduções como desactualizadas</em> para marcar todas as "
+"traduções como desactualizadas e a necessitarem de revisão. Traduções "
+"individuais podem ser marcadas para revisão marcando a caixa de selecção "
+"<em>Esta tradução necessita de ser actualizada</em> no formulário de edição "
+"da tradução."
+
+#: modules/translation/translation.module:43
+msgid ""
+"The <a href=\"@content-node\">Content management administration page</a> "
+"displays the language of each post, and also allows filtering by language or "
+"translation status."
+msgstr ""
+"A <a href=\"@content-node\">Página de administração de conteúdo</a> mostra o "
+"idioma de cada entrada e também permite filtrar por idioma ou estado de "
+"tradução."
+
+#: modules/translation/translation.module:44
+msgid ""
+"Use the <a href=\"@blocks\">language switcher block</a> provided by locale "
+"module to allow users to select a language. If available, both the site "
+"interface and site content are presented in the language selected."
+msgstr ""
+"Utilize o <a href=\"@blocks\">bloco de alteração de idioma</a> fornecido "
+"pelo módulo locale, para permitir que os utilizadores possam seleccionar o "
+"idioma. Se disponível, tanto a interface como o conteúdo do site serão "
+"mostrados no idioma seleccionado."
+
+#: modules/translation/translation.module:45
+msgid ""
+"For more information, see the online handbook entry for <a href="
+"\"@translation\">Translation module</a>."
+msgstr ""
+"Para mais informações, ver a página do manual sobre o <a href=\"@translation"
+"\">Módulo translation</a>."
+
+#: modules/translation/translation.module:48
+msgid ""
+"Translations of a piece of content are managed with translation sets. Each "
+"translation set has one source post and any number of translations in any of "
+"the <a href=\"!languages\">enabled languages</a>. All translations are "
+"tracked to be up to date or outdated based on whether the source post was "
+"modified significantly."
+msgstr ""
+"Traduções de conteúdo são geridas com conjuntos de traduções. Cada conjunto "
+"de traduções tem uma entrada de origem e um número de traduções em qualquer "
+"dos <a href=\"!languages\">idiomas activos</a>. Todas as traduções são "
+"seguidas para verificar se se encontram actualizadas ou desactualizadas, com "
+"base na dimensão das alterações da entrada de origem."
+
+#: modules/translation/translation.module:102
+msgid "Enabled, with translation"
+msgstr "Activado, com tradução"
+
+#: modules/translation/translation.module:104
+msgid ""
+"Enable multilingual support for this content type. If enabled, a language "
+"selection field will be added to the editing form, allowing you to select "
+"from one of the <a href=\"!languages\">enabled languages</a>. You can also "
+"turn on translation for this content type, which lets you have content "
+"translated to any of the enabled languages. If disabled, new posts are saved "
+"with the default language. Existing content will not be affected by changing "
+"this option."
+msgstr ""
+"Activar suporte multi-idioma para este tipo de conteúdo. Ao activar esta "
+"opção, um campo de selecção de idioma será adicionado ao formulário de "
+"edição, permitindo-lhe seleccionar um dos <a href=\"!languages\">idiomas "
+"activos</a>. Também pode activar a tradução para este tipo de conteúdo, o "
+"que lhe permite ter conteúdo traduzido para qualquer um dos idiomas activos. "
+"Se estiver desactivado, novas entradas serão gravadas com o idioma padrão. "
+"Conteúdos existentes não serão afectados ao alterar esta opção."
+
+#: modules/translation/translation.module:127
+msgid "Translation settings"
+msgstr "Configurações de tradução"
+
+#: modules/translation/translation.module:138
+msgid "Flag translations as outdated"
+msgstr "Marcar tradução como desactualizada"
+
+#: modules/translation/translation.module:140
+msgid ""
+"If you made a significant change, which means translations should be "
+"updated, you can flag all translations of this post as outdated. This will "
+"not change any other property of those posts, like whether they are "
+"published or not."
+msgstr ""
+"Se fez uma alteração considerável, o que significa que as traduções devem "
+"ser actualizadas, pode marcar todas as traduções desta entrada como "
+"desactualizadas. Isto não irá afectar nenhuma outra propriedade dessas "
+"entradas, como se estão publicadas ou não."
+
+#: modules/translation/translation.module:147
+msgid "This translation needs to be updated"
+msgstr "Esta tradução necessita de ser actualizada"
+
+#: modules/translation/translation.module:149
+msgid ""
+"When this option is checked, this translation needs to be updated because "
+"the source post has changed. Uncheck when the translation is up to date "
+"again."
+msgstr ""
+"Quando esta opção está marcada, esta tradução necessita de ser actualizada "
+"porque a origem da entrada foi alterada. Desmarque esta opção quando a "
+"tradução estiver novamente actualizada."
+
+#: modules/translation/translation.module:89
+msgid "translate content"
+msgstr "traduzir conteúdo"
+
+#: modules/translation/translation.module:59
+msgid "Translate"
+msgstr "Traduzir"
+
+#: modules/translation/translation.module:0
+msgid "translation"
+msgstr "tradução"

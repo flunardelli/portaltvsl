@@ -1,0 +1,5 @@
+$Id: CHANGELOG.txt,v 1.1.4.3 2009/06/23 15:30:25 earnie Exp $
+
+Advanced User 6.x-3, 2009-06-23
+-----------------------------------
+#470605 Need to remember the page the action was executed from.

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>Title</title>
+</head>
+<body>
+<h3>Sample Drupal BLOCK Code</h3>
+<pre class="code">
+function my_module_block($op = 'list', $delta = 0) {
+  switch ($op) {
+    case 'list':
+      $block[0]['info'] = t('jQuery Hearbeat Test');
+      return $block;
+      break;
+     
+    case 'view':
+      jquery_heartbeat_set(
+        1500,
+        'heartbeat-demo1',
+        '',
+        '$.my_script.percent_bar(\'heartbeat-demo2\'); 
+         $.my_script.random_num(\'heartbeat-demo3\'); 
+         $.my_script.random_clr(\'heartbeat-demo4\');',
+        TRUE);
+        
+      $output  = '&lt;div id="heartbeat-demo1"&gt;'
+               .   t('Loading jQuery Hearbeat Test ...')
+               . '&lt;/div&gt;'
+               . '&lt;div id="heartbeat-demo2"&gt;'
+               . '&lt;table&gt;&lt;tbody&gt;'
+               . '&lt;tr&gt;'
+               .   '&lt;td class="left"&gt;&amp;nbsp;&lt;/td&gt;'
+               .   '&lt;td class="right"&gt;&amp;nbsp;&lt;/td&gt;'
+               . '&lt;/tr&gt;'
+               . '&lt;tr&gt;&lt;td class="percent" colspan="2"&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;'
+               . '&lt;/tbody&gt;&lt;/table&gt;'
+               . '&lt;/div&gt;'
+               . '&lt;div id="heartbeat-demo3"&gt;'. t('Guessing ...') .'&lt;/div&gt;';
+
+      $block['subject'] = t('jQuery Hearbeat Test');
+      $block['content'] = $output;
+      
+      return $block;
+      break;
+  }
+}
+</pre>
+
+<h3>Sample JavaScript Callback Code</h3>
+<pre class="code">
+_my_script_unique.counter = -1;
+function _my_script_unique() {
+  return _my_script_unique.counter++;
+}
+function _my_script_random(iMin, iMax) {
+  return iMin + Math.floor(Math.random() * (iMax - iMin + 1));
+}
+
+$.my_script = {
+  percent_bar: function(sID) {
+    var iVal = _jheartbeat_unique() % 100;
+    if (iVal &lt; 1) iVal = 1;
+    $('#'+ sID +' .left').css('width', iVal +'%');
+    $('#'+ sID +' .right').css('width', (100 - iVal) + '%');
+    $('#'+ sID +' .percent').html('&lt;em&gt;'+ iVal +'%&lt;/em&gt;');
+  },
+  
+  random_num: function(sID) {
+    var iVal = _jheartbeat_random(1, 1000);
+    $('#'+ sID).html('&lt;span class="label"&gt;Magic number:&lt;/span&gt; '+
+                     '&lt;span class="data"&gt;'+ iVal +'&lt;/span&gt;');
+  },
+  
+  random_clr: function(sID) {
+    var iR = _jheartbeat_random(0, 255);
+    var iG = _jheartbeat_random(0, 255);
+    var iB = _jheartbeat_random(0, 255);
+    $('#'+ sID).css('background-color', 'rgb('+ iR +','+ iG +','+ iG +')');
+    $('#'+ sID).css('color', '#FFF');
+  }
+};
+</pre>
+</body>
+</html>

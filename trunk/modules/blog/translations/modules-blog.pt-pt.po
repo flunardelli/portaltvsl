@@ -1,0 +1,256 @@
+# $Id: modules-blog.po,v 1.1.2.2 2008/09/28 09:38:47 seventhguardian Exp $
+#
+# Portuguese translation of Drupal (modules/blog/blog.module)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: blog.module,v 1.271.2.2 2007/04/23 17:05:11 dries
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2008-09-28 10:37+0100\n"
+"Last-Translator: Renato Caldas <seventhguardian@gmail.com>\n"
+"Language-Team: Portuguese (Portugal) <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: modules/blog/blog.pages.inc:15 modules/blog/blog.module:108
+msgid "@name's blog"
+msgstr "O blogue de @name"
+
+#: modules/blog/blog.pages.inc:20
+msgid "Post new blog entry."
+msgstr "Publicar uma nova entrada no blogue."
+
+#: modules/blog/blog.pages.inc:23
+msgid "You are not allowed to post a new blog entry."
+msgstr "Não está autorizado a publicar uma nova entrada no blogue."
+
+#: modules/blog/blog.pages.inc:41
+msgid "You have not created any blog entries."
+msgstr "Não criou quaisquer entradas de blogue."
+
+#: modules/blog/blog.pages.inc:44
+msgid "!author has not created any blog entries."
+msgstr "!author não criou quaisquer entradas de blogue."
+
+#: modules/blog/blog.pages.inc:47
+msgid "RSS - !title"
+msgstr "RSS - !title"
+
+#: modules/blog/blog.pages.inc:62
+msgid "Create new blog entry."
+msgstr "Criar uma nova entrada no blogue."
+
+#: modules/blog/blog.pages.inc:79
+msgid "No blog entries have been created."
+msgstr "Não foram criadas entradas no blogue."
+
+#: modules/blog/blog.pages.inc:81
+msgid "RSS - blogs"
+msgstr "RSS - blogues"
+
+#: modules/blog/blog.module:15
+msgid "Blog entry"
+msgstr "Entrada no blogue"
+
+#: modules/blog/blog.module:17
+msgid ""
+"A <em>blog entry</em> is a single post to an online journal, or <em>blog</"
+"em>."
+msgstr ""
+"Uma <em>entrada no blogue</em> é uma entrada isolada num diário online ou "
+"<em>blogue</em>."
+
+#: modules/blog/blog.module:52
+msgid "View recent blog entries"
+msgstr "Exibir entradas recentes no blogue"
+
+#: modules/blog/blog.module:52;124
+msgid "Read @username's latest blog entries."
+msgstr "Ler as últimas entradas no blogue de @username."
+
+#: modules/blog/blog.module:64
+msgid ""
+"The blog module allows registered users to maintain an online journal, or "
+"<em>blog</em>. Blogs are made up of individual <em>blog entries</em>, and "
+"the blog entries are most often displayed in descending order by creation "
+"time."
+msgstr ""
+"O módulo blog permite aos utilizadores registados manter um diário online, "
+"ou <em>blogue</em>. Os blogues são constituídos por entradas individuais e "
+"na maior parte das vezes as entradas são exibidas da mais recente para a "
+"mais antiga."
+
+#: modules/blog/blog.module:65
+msgid ""
+"There is an (optional) <em>Blogs</em> menu item added to the Navigation "
+"menu, which displays all blogs available on your site, and a <em>My blog</"
+"em> item displaying the current user's blog entries. The <em>Blog entry</em> "
+"menu item under <em>Create content</em> allows new blog entries to be "
+"created."
+msgstr ""
+"Existe um item de menu (opcional) <em>Blogues</em> no menu de Navegação, que "
+"exibe todos os blogues disponíveis no seu site, e um item <em>O meu blogue</"
+"em> que exibe as entradas de blogue do utilizador actual. A opção "
+"<em>Entrada de blogue</em> por baixo de <em>Criar conteúdos</em> permite que "
+"sejam criadas novas entradas de blogue."
+
+#: modules/blog/blog.module:66
+msgid ""
+"Each blog entry is displayed with an automatic link to other blogs created "
+"by the same user. By default, blog entries have comments enabled and are "
+"automatically promoted to the site front page. The blog module also creates "
+"a <em>Recent blog posts</em> block that may be enabled at the <a href="
+"\"@blocks\">blocks administration page</a>."
+msgstr ""
+"Cada entrada no blogue é exibida com uma ligação automática para outros "
+"blogues criados pelo mesmo utilizador. Por defeito, as entradas no blogue "
+"têm os comentários activos e são automáticamente promovidas para a página "
+"inicial. O módulo blog também cria um bloco de <em>Entradas recentes no "
+"blogue</em> que pode ser activado na <a href=\"@blocks\">página de "
+"administração de blocos</a>."
+
+#: modules/blog/blog.module:67
+msgid ""
+"When using the aggregator module an automatic <em>blog it</em> icon is "
+"displayed next to the items in a feed's <em>latest items</em> block. "
+"Clicking this icon populates a <em>blog entry</em> with a title (the title "
+"of the feed item) and body (a link to the source item on its original site "
+"and illustrative content suitable for use in a block quote). Blog authors "
+"can use this feature to easily comment on items of interest that appear in "
+"aggregator feeds from other sites. To use this feature, be sure to <a href="
+"\"@modules\">enable</a> the aggregator module, <a href=\"@feeds\">add and "
+"configure</a> a feed from another site, and <a href=\"@blocks\">position</a> "
+"the feed's <em>latest items</em> block."
+msgstr ""
+"Quanto utilizar o módulo <em>aggregator</em> é exibido automáticamente um "
+"icon <em>publicar no blogue</em>, próximo dos itens nos feeds do bloco "
+"<em>últimos itens</em>. Clicando neste icon irá automáticamente preencher "
+"uma <em>entrada de blogue</em> com um título (o título do item no feed), um "
+"corpo (um link para a fonte do item no seu stie original e conteúdo de "
+"exemplo apropriado para públicação numa citação de bloco). Os autores do "
+"blogue pode utilizar esta funcionalidade para comentar facilmente os itens "
+"de interesse que surgem nos feeds agragados a partir de outros sites. Para "
+"utilizar esta funcionalidades, certifique-se de <a href=\"@modules"
+"\">activar</a> o módulo agregador, <a href=\"@feeds\">adicionar e "
+"configurar</a> um feed de outro site, e <a href=\"@blocks\">posicionar</a> o "
+"feed no bloco <em>últimos itens</em>."
+
+#: modules/blog/blog.module:68
+msgid ""
+"For more information, see the online handbook entry for <a href=\"@blog"
+"\">Blog module</a>."
+msgstr ""
+"Para informações adicionais consulte no manual online a informação sobre o "
+"<a href=\"@blog\">módulo blogue</a>."
+
+#: modules/blog/blog.module:108;137;152;160
+msgid "Blogs"
+msgstr "Blogues"
+
+#: modules/blog/blog.module:122
+msgid "@username's blog"
+msgstr "O blogue de @username"
+
+#: modules/blog/blog.module:178;187
+msgid "Recent blog posts"
+msgstr "Entradas recentes no blogue"
+
+#: modules/blog/blog.module:186
+msgid "Read the latest blog entries."
+msgstr "Ler as últimas entradas no blogue."
+
+#: modules/blog/blog.module:26
+msgid "create blog entries"
+msgstr "criar entradas no blogue"
+
+#: modules/blog/blog.module:26
+msgid "delete own blog entries"
+msgstr "eliminar as suas entradas no blogue"
+
+#: modules/blog/blog.module:26
+msgid "delete any blog entry"
+msgstr "eliminar quaisquer entradas no blogue"
+
+#: modules/blog/blog.module:26
+msgid "edit own blog entries"
+msgstr "editar o seu blogue"
+
+#: modules/blog/blog.module:26
+msgid "edit any blog entry"
+msgstr "editar quaisquer entradas no blogue"
+
+#: modules/blog/blog.module:144
+msgid "My blog"
+msgstr "O meu blogue"
+
+#: modules/blog/blog.module:0
+msgid "blog"
+msgstr "blogue"
+
+#~ msgid ""
+#~ "A blog is a regularly updated journal or diary made up of individual "
+#~ "posts shown in reversed chronological order. Each member of the site may "
+#~ "create and maintain a blog."
+#~ msgstr ""
+#~ "Um blogue é um diário ou jornal actualizado regularmente, constituído por "
+#~ "artigos individuais (entradas) exibidos em ordem cronológica inversa. "
+#~ "Cada utilizador do site poderá criar e manter um blogue."
+
+#~ msgid ""
+#~ "The blog module allows registered users to maintain an online weblog "
+#~ "(commonly known as a blog), often referred to as an online journal or "
+#~ "diary. Blogs are made up of individual posts that are time stamped and "
+#~ "are typically viewed by date as you would a diary. Blogs often contain "
+#~ "links to web pages users have read and/or agree/disagree with."
+#~ msgstr ""
+#~ "O módulo de blogue permite que os utilizadores registados mantenham um "
+#~ "blogue. Os blogues são compostos de entradas individuais marcadas com a "
+#~ "data e hora e ordenadas tipicamente pela data como um diário. Os blogues "
+#~ "frequentemente contêm ligações a páginas web que os utilizadores leram e/"
+#~ "ou com as quais concordam ou discordam."
+
+#~ msgid ""
+#~ "The blog module adds a <em>user blogs</em> navigation link to the site, "
+#~ "which takes any visitor to a page that displays the most recent blog "
+#~ "entries from all the users on the site. The navigation menu has a "
+#~ "<em>create a blog entry</em> link (which takes you to a submission form) "
+#~ "and a <em>view personal blog</em> link (which displays your blog entries "
+#~ "as other people will see them). The blog module also creates a <em>recent "
+#~ "blog posts</em> block that can be enabled."
+#~ msgstr ""
+#~ "O módulo do blogue adiciona uma ligação de navegação do <em>blogues de "
+#~ "utilizadores</em> ao site, que conduz o visitante a uma página que exibe "
+#~ "as entradas de blogue mais recentes de todos os utilizadores do site. O "
+#~ "menu da navegação tem uma ligação para <em>publicar uma entrada no "
+#~ "blogue</em> (que permite acesso a um formulário da submissão) e uma "
+#~ "ligação pessoal para <em>exibir o blogue</em> (que permite ver as suas "
+#~ "entradas no blogue da forma que as pessoas as verão). O módulo do blogue "
+#~ "cria também um bloco de <em>entradas recentes no blogue</em> que pode ser "
+#~ "activado."
+
+#~ msgid ""
+#~ "If a user has the ability to post blogs, then the import module (news "
+#~ "aggregator) will display a blog-it link next to each news item in its "
+#~ "lists. Clicking on this takes the user to the blog submission form, with "
+#~ "the title, a link to the item, and a link to the source into the body "
+#~ "text already in the text box, ready for the user to add a comment or "
+#~ "explanation. This actively encourages people to add blog entries about "
+#~ "things they see and hear elsewhere in the website and from your "
+#~ "syndicated partner sites."
+#~ msgstr ""
+#~ "Se um utilizador tem autorização para publicar blogues, então o módulo da "
+#~ "importação (agregador da notícias) indicá-lo-á com uma ligação ao lado de "
+#~ "cada artigo de notícia nas suas listas. Activando esta ligação o "
+#~ "utilizador irá ter acesso ao formulário da submissão do blogue, com o "
+#~ "título, uma ligação ao artigo e uma ligação à fonte no texto já na caixa "
+#~ "do corpo do texto, pronta para o utilizador adicionar um comentário ou "
+#~ "uma explicação. Isto incentiva as pessoas a adicionar entradas no blogue "
+#~ "sobre coisas que vêem e ouvem noutra parte do site ou de sites parceiros "
+#~ "sindicados."

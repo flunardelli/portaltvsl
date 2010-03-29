@@ -1,0 +1,221 @@
+# $Id: modules-trigger.po,v 1.1.2.1 2008/04/09 01:08:08 borfast Exp $
+#
+# Portuguese translation of Drupal (modules-trigger)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  trigger.admin.inc,v 1.5 2008/01/08 10:35:43 goba
+#  trigger.module,v 1.13 2008/01/21 20:08:15 goba
+#  trigger.install,v 1.5 2007/12/28 12:02:52 dries
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2008-04-09 02:06+0100\n"
+"Last-Translator: Raul Pedro Fernandes Santos <borfast@yahoo.com>\n"
+"Language-Team: Portuguese (Portugal) <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: modules/trigger/trigger.admin.inc:74
+msgid "Are you sure you want to unassign the action %title?"
+msgstr "Tem a certeza de que quer retirar a acção %title?"
+
+#: modules/trigger/trigger.admin.inc:76
+msgid "You can assign it again later if you wish."
+msgstr "Pode atribuí-la novamente mais tarde, se desejar."
+
+#: modules/trigger/trigger.admin.inc:77 modules/trigger/trigger.module:111
+msgid "Unassign"
+msgstr "Retirar"
+
+#: modules/trigger/trigger.admin.inc:88;87
+msgid "Action %action has been unassigned."
+msgstr "A acção %action foi retirada."
+
+#: modules/trigger/trigger.admin.inc:144
+msgid "Trigger: "
+msgstr "Trigger:"
+
+#: modules/trigger/trigger.admin.inc:154
+msgid "unassign"
+msgstr "retirar"
+
+#: modules/trigger/trigger.admin.inc:164 modules/trigger/trigger.module:411
+msgid "Choose an action"
+msgstr "Escolha uma acção"
+
+#: modules/trigger/trigger.admin.inc:171
+msgid "Assign"
+msgstr "Atribuir"
+
+#: modules/trigger/trigger.admin.inc:176
+msgid "No available actions for this trigger."
+msgstr "Não existem acções disponíveis para este trigger."
+
+#: modules/trigger/trigger.admin.inc:192
+msgid "The action you chose is already assigned to that trigger."
+msgstr "A acção que escolheu já está atribuída ao trigger."
+
+#: modules/trigger/trigger.admin.inc:218
+msgid ""
+"You have added an action that changes a the property of a post. A Save post "
+"action has been added so that the property change will be saved."
+msgstr ""
+"Adicionou uma acção que altera a propriedade de uma entrada. Uma acção "
+"Gravar entrada foi adicionada para que a alteração da propriedade seja "
+"gravada."
+
+#: modules/trigger/trigger.admin.inc:238
+msgid "Operation"
+msgstr "Operação"
+
+#: modules/trigger/trigger.module:14
+msgid ""
+"Triggers are system events, such as when new content is added or when a user "
+"logs in. Trigger module combines these triggers with actions (functional "
+"tasks), such as unpublishing content or e-mailing an administrator. The <a "
+"href=\"@url\">Actions settings page</a> contains a list of existing actions "
+"and provides the ability to create and configure additional actions."
+msgstr ""
+"Triggers são eventos do sistema, como por exemplo, quando novo conteúdo é "
+"adicionado ou quando um utilizador inicia a sua sessão. O módulo trigger "
+"combina estes eventos com acções (tarefas funcionais), tais como despublicar "
+"conteúdo ou enviar um e-mail a um administrador. A <a href=\"@url\">página "
+"de configuração de Acções</a> contém uma lista das acções existentes e "
+"proporciona a possibilidade de criar e configurar acções adicionais."
+
+#: modules/trigger/trigger.module:17
+msgid ""
+"Below you can assign actions to run when certain comment-related triggers "
+"happen. For example, you could promote a post to the front page when a "
+"comment is added."
+msgstr ""
+"Abaixo pode definir acções a serem executadas quando certos eventos "
+"relacionados com comentários tiverem lugar. Por exemplo, pode promover uma "
+"entrada à página principal quando um comentário for adicionado."
+
+#: modules/trigger/trigger.module:19
+msgid ""
+"Below you can assign actions to run when certain content-related triggers "
+"happen. For example, you could send an e-mail to an administrator when a "
+"post is created or updated."
+msgstr ""
+"Abaixo pode definir acções a serem executadas quando certos eventos "
+"relacionados com conteúdos tiverem lugar. Por exemplo, pode enviar um e-mail "
+"a um administrador quando uma nova entrada é criada ou actualizada."
+
+#: modules/trigger/trigger.module:21
+msgid ""
+"Below you can assign actions to run during each pass of a <a href=\"@cron"
+"\">cron maintenance task</a>."
+msgstr ""
+"Abaixo pode definir acções a serem executadas aquando de cada execução da <a "
+"href=\"@cron\">tarefa de manutenção cron</a>."
+
+#: modules/trigger/trigger.module:23
+msgid ""
+"Below you can assign actions to run when certain taxonomy-related triggers "
+"happen. For example, you could send an e-mail to an administrator when a "
+"term is deleted."
+msgstr ""
+"Abaixo pode definir acções a serem executadas quando determinados eventos "
+"relacionados com a taxonomia tiverem lugar. Por exemplo, pode enviar um e-"
+"mail a um administrador quando um termo é removido."
+
+#: modules/trigger/trigger.module:25
+msgid ""
+"Below you can assign actions to run when certain user-related triggers "
+"happen. For example, you could send an e-mail to an administrator when a "
+"user account is deleted."
+msgstr ""
+"Abaixo pode definir acções a serem executadas quando determinados eventos "
+"relacionados com utilizadores tiverem lugar. Por exemplo, pode enviar um e-"
+"mail a um administrador quando uma conta de utilizador é removida."
+
+#: modules/trigger/trigger.module:27
+msgid ""
+"The Trigger module provides the ability to trigger <a href=\"@actions"
+"\">actions</a> upon system events, such as when new content is added or when "
+"a user logs in."
+msgstr ""
+"O módulo Trigger proporciona a possibilidade de despoletar <a href=\"@actions"
+"\">acções</a> sobre certos eventos do sistema, tais como quando novo "
+"conteúdo é adicionado ou quando um utilizador inicia a sua sessão."
+
+#: modules/trigger/trigger.module:28
+msgid ""
+"The combination of actions and triggers can perform many useful tasks, such "
+"as e-mailing an administrator if a user account is deleted, or automatically "
+"unpublishing comments that contain certain words. By default, there are five "
+"\"contexts\" of events (Comments, Content, Cron, Taxonomy, and Users), but "
+"more may be added by additional modules."
+msgstr ""
+"A combinação de acções e triggers pode realizar muitas tarefas úteis, como "
+"enviar um e-mail a um administrador se uma conta de utilizador for removida, "
+"ou despublicar automaticamente comentários que contenham determinadas "
+"palavras. Por defeito existem cinco \"contextos\" de eventos (Comentários, "
+"Conteúdo, Cron, Taxonomia e Utilizadores) mas outros contextos podem ser "
+"criados por módulos adicionais."
+
+#: modules/trigger/trigger.module:29
+msgid ""
+"For more information, see the online handbook entry for <a href=\"@trigger"
+"\">Trigger module</a>."
+msgstr ""
+"Para mais informação consulte a página do manual referente ao <a href="
+"\"@trigger\">módulo Trigger</a>."
+
+#: modules/trigger/trigger.module:39
+msgid "Triggers"
+msgstr "Triggers"
+
+#: modules/trigger/trigger.module:40
+msgid "Tell Drupal when to execute actions."
+msgstr "Dizer ao Drupal quando executar acções."
+
+#: modules/trigger/trigger.module:83
+msgid "Cron"
+msgstr "Cron"
+
+#: modules/trigger/trigger.module:112
+msgid "Unassign an action from a trigger."
+msgstr "Retirar uma acção de um trigger."
+
+#: modules/trigger/trigger.module:0
+msgid "trigger"
+msgstr "trigger"
+
+#: modules/trigger/trigger.install:28
+msgid "Maps trigger to hook and operation assignments from trigger.module."
+msgstr ""
+"Associa um trigger a atribuições de hooks e operações do trigger.module."
+
+#: modules/trigger/trigger.install:35
+msgid ""
+"Primary Key: The name of the internal Drupal hook upon which an action is "
+"firing; for example, nodeapi."
+msgstr ""
+"Chave Primária: O nome do hook interno do Drupal sobre o qual uma acção está "
+"a ser despoletada; por exemplo, nodeapi."
+
+#: modules/trigger/trigger.install:42
+msgid ""
+"Primary Key: The specific operation of the hook upon which an action is "
+"firing: for example, presave."
+msgstr ""
+"Chave Primária: A operação específica do hook que está a despoletar a acção: "
+"por exemplo, presave."
+
+#: modules/trigger/trigger.install:49
+msgid "Primary Key: Action's {actions}.aid."
+msgstr "Chave Primária: {actions}.aid da acção."
+
+#: modules/trigger/trigger.install:55
+msgid "The weight of the trigger assignment in relation to other triggers."
+msgstr "O peso do trigger em relação a outros triggers."

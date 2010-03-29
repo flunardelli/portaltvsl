@@ -1,0 +1,81 @@
+# $Id: modules-help.po,v 1.1.2.1 2008/03/03 21:58:32 mcduarte Exp $
+#
+# LANGUAGE translation of Drupal (modules-help)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  help.admin.inc,v 1.5 2007/11/25 11:11:17 goba
+#  help.module,v 1.78 2007/12/14 18:08:46 goba
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2008-03-03 21:58-0000\n"
+"Last-Translator: Miguel Duarte <home@miguelduarte.net>\n"
+"Language-Team: Portuguese from Portugal <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: modules/help/help.admin.inc:15
+msgid "Help topics"
+msgstr "Tópicos de ajuda"
+
+#: modules/help/help.admin.inc:15
+msgid "Help is available on the following items:"
+msgstr "A ajuda está disponível para os seguintes itens:"
+
+#: modules/help/help.admin.inc:30
+msgid "No help is available for module %module."
+msgstr "Não existe ajuda disponível para o módulo %module."
+
+#: modules/help/help.admin.inc:41
+msgid "@module administration pages"
+msgstr "páginas de administração do módulo @module"
+
+#: modules/help/help.module:40
+msgid ""
+"This guide provides context sensitive help on the use and configuration of "
+"<a href=\"@drupal\">Drupal</a> and its modules, and is a supplement to the "
+"more extensive online <a href=\"@handbook\">Drupal handbook</a>. The online "
+"handbook may contain more up-to-date information, is annotated with helpful "
+"user-contributed comments, and serves as the definitive reference point for "
+"all Drupal documentation."
+msgstr ""
+"Este guia fornece ajuda sensível ao contexto na utilização e configuração do "
+"<a href=\"@drupal\">Drupal</a> e dos seus módulos, sendo um complemento ao "
+"mais completo <a href=\"@handbook\">manual do Drupal </a>. O manual pode "
+"conter informação mais actualizada, está anotado com comentários dos "
+"utilizadores e é a referência definitiva de toda a documentação do Drupal."
+
+#: modules/help/help.module:43
+msgid ""
+"The help module provides context sensitive help on the use and configuration "
+"of <a href=\"@drupal\">Drupal</a> and its modules, and is a supplement to "
+"the more extensive online <a href=\"@handbook\">Drupal handbook</a>. The "
+"online handbook may contain more up-to-date information, is annotated with "
+"helpful user-contributed comments, and serves as the definitive reference "
+"point for all Drupal documentation."
+msgstr ""
+"O módulo help fornece ajuda sensível ao contexto na utilização e "
+"configuração do <a href=\"@drupal\">Drupal</a> e dos seus módulos, sendo um "
+"complemento ao mais completo <a href=\"@handbook\">manual do Drupal </a>. O "
+"manual pode conter informação mais actualizada, está anotado com comentários "
+"dos utilizadores e é a referência definitiva de toda a documentação do "
+"Drupal."
+
+#: modules/help/help.module:44
+msgid ""
+"For more information, see the online handbook entry for <a href=\"@help"
+"\">Help module</a>."
+msgstr ""
+"Para informações adicionais consulte a entrada no manual para <a href=\"@help"
+"\">Módulo de ajuda</a>."
+
+#: modules/help/help.module:0
+msgid "help"
+msgstr "ajuda"

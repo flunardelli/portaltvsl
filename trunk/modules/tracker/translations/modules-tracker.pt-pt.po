@@ -1,0 +1,92 @@
+# $Id: modules-tracker.po,v 1.1.2.1 2008/03/01 10:38:02 mcduarte Exp $
+#
+# Portuguese translation of Drupal (modules/tracker/tracker.module)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: tracker.module,v 1.143.2.2 2007/07/26 19:16:50 drumm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal pt-pt 6.0\n"
+"POT-Creation-Date: 2008-02-15 13:50+0100\n"
+"PO-Revision-Date: 2008-03-01 10:37-0000\n"
+"Last-Translator: Miguel Duarte <home@miguelduarte.net>\n"
+"Language-Team: Portuguese (Portugal) <home@miguelduarte.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: modules/tracker/tracker.pages.inc:57
+msgid "!time ago"
+msgstr "!time atrás"
+
+#: modules/tracker/tracker.pages.inc:65
+msgid "Post"
+msgstr "Publicar"
+
+#: modules/tracker/tracker.pages.inc:65
+msgid "Last updated"
+msgstr "Última actualização"
+
+#: modules/tracker/tracker.module:15
+msgid ""
+"The tracker module displays the most recently added or updated content on "
+"your site, and provides user-level tracking to follow the contributions of "
+"particular authors."
+msgstr ""
+"O módulo <em>tracker</em> exibe o conteúdo adicionado ou actualizado "
+"recentemente, permitindo aos utilizadores conhecer as contribuições mais "
+"recentes. O módulo <em>tracker</em> permite também o controlo de entradas "
+"por cada utilizador, por forma a que se possa seguir as contribuições de "
+"cada autor em particular."
+
+#: modules/tracker/tracker.module:16
+msgid ""
+"The <em>Recent posts</em> page is available via a link in the navigation "
+"menu block and displays new and recently-updated content (including the "
+"content type, the title, the author's name, number of comments, and time of "
+"last update) in reverse chronological order. Posts are marked updated when "
+"changes occur in the text, or when new comments are added. To use the "
+"tracker module to follow a specific user's contributions, select the "
+"<em>Track</em> tab from the user's profile page."
+msgstr ""
+"A página <em>Entradas recente</em> está disponível através de uma ligação no "
+"bloco do menu de navegação e contém conteúdos novos ou actualizados "
+"recentemente (incluindo o tipo de conteúdo, o título, o nome do autor, "
+"quantos comentários recebeu o artigo e quando foi actualizado pela última "
+"vez) numa ordem cronológica inversa. As entradas são marcadas como "
+"actualizadas quando ocorrem alterações no texto, ou quando são adicionados "
+"novos comentários. Se desejar usar o módulo <em>tracker</em> para acompanhar "
+"as contribuições de um determinado utilizador, seleccione o separador "
+"<em>Acompanhar</em> na página de perfil do utilizador."
+
+#: modules/tracker/tracker.module:17
+msgid ""
+"For more information, see the online handbook entry for <a href=\"@tracker"
+"\">Tracker module</a>."
+msgstr ""
+"Para informações adicionais consulte a secção do manual para o <a href=\"%"
+"contact\">módulo <em>Tracker</em></a>."
+
+#: modules/tracker/tracker.module:27
+msgid "Recent posts"
+msgstr "Entradas recentes"
+
+#: modules/tracker/tracker.module:34
+msgid "All recent posts"
+msgstr "Todas as entradas"
+
+#: modules/tracker/tracker.module:39
+msgid "My recent posts"
+msgstr "As minhas entradas"
+
+#: modules/tracker/tracker.module:53
+msgid "Track posts"
+msgstr "Exibir entradas"
+
+#: modules/tracker/tracker.module:0
+msgid "tracker"
+msgstr "rastreador"

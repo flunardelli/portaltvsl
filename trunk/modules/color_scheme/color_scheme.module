@@ -1,0 +1,465 @@
+<?php
+// $Id: color_scheme.module,v 1.5 2008/08/15 18:50:36 jtsnow Exp $
+
+/**
+ * @file
+ * An API to generate color schemes from a base color.
+ * 
+ * Drupal module adapted from the following project:
+ * http://www.barelyfitz.com/projects/csscolor/
+ */
+
+class color_scheme {
+  //==================================================
+  //==PARAMETERS======================================
+  //==================================================
+
+  // $this->bg = array of CSS color values
+  // $this->bg[0] is the bg color
+  // $this->bg['+1'..'+5'] are lighter colors
+  // $this->bg['-1'..'-5'] are darker colors
+  var $bg = array();
+
+  // $this->fg = array of foreground colors.
+  // Each color corresponds to a background color.
+  var $fg = array();
+
+  // brightDiff is the minimum brightness difference
+  // between the background and the foreground.
+  // Note: you should not change this directly,
+  // instead use set_min_bright_diff() and get_min_bright_diff()
+  var $min_bright_diff = 126;
+  
+  // color_diff is the minimum color difference
+  // between the background and the foreground.
+  // Note: you should not change this directly,
+  // instead use set_min_color_diff() and get_min_color_diff()
+  var $min_color_diff = 500;
+
+  //==================================================
+  //==CONSTRUCTOR=====================================
+  //==================================================
+
+  function color_scheme($bg_hex, $fg_hex='') {
+    // This is the constructor method for the class,
+    // which is called when a new object is created.
+
+    // Initialize the palette
+    $this->set_palette($bg_hex, $fg_hex);
+  }
+
+  //==================================================
+  //==METHODS=========================================
+  //==================================================
+
+  //--------------------------------------------------
+  function set_palette($bg_hex, $fg_hex = '') {
+    // Initialize the color palettes
+
+    // If a foreground color was not specified,
+    // just use the background color.
+    if (!$fg_hex) {
+      $fg_hex = $bg_hex;
+    }
+
+    // Clear the existing palette
+    $this->bg = array();
+    $this->fg = array();
+
+    // Make sure we got a valid hex value
+    if (!$this->is_hex($bg_hex)) {
+      $this->raise_error("Background color '$bg_hex' is not a hex color value.");
+      return FALSE;
+    }
+
+    // Set the bg color
+    $this->bg[0] = $bg_hex;
+
+    $this->bg['+1'] = $this->lighten($bg_hex, .85);
+    $this->bg['+2'] = $this->lighten($bg_hex, .75);
+    $this->bg['+3'] = $this->lighten($bg_hex, .5);
+    $this->bg['+4'] = $this->lighten($bg_hex, .25);
+    $this->bg['+5'] = $this->lighten($bg_hex, .1);
+
+    $this->bg['-1'] = $this->darken($bg_hex, .85);
+    $this->bg['-2'] = $this->darken($bg_hex, .75);
+    $this->bg['-3'] = $this->darken($bg_hex, .5);
+    $this->bg['-4'] = $this->darken($bg_hex, .25);
+    $this->bg['-5'] = $this->darken($bg_hex, .1);
+
+    // Make sure we got a valid hex value
+    if (!$this->is_hex($fg_hex)) {
+      $this->raise_error("Background color '$bg_hex' is not a hex color value.");
+      return FALSE;
+    }
+
+    // Set up the foreground colors
+    $this->fg[0]    = $this->calc_fg( $this->bg[0], $fg_hex);
+    $this->fg['+1'] = $this->calc_fg( $this->bg['+1'], $fg_hex);
+    $this->fg['+2'] = $this->calc_fg( $this->bg['+2'], $fg_hex);
+    $this->fg['+3'] = $this->calc_fg( $this->bg['+3'], $fg_hex);
+    $this->fg['+4'] = $this->calc_fg( $this->bg['+4'], $fg_hex);
+    $this->fg['+5'] = $this->calc_fg( $this->bg['+5'], $fg_hex);
+    $this->fg['-1'] = $this->calc_fg( $this->bg['-1'], $fg_hex);
+    $this->fg['-2'] = $this->calc_fg( $this->bg['-2'], $fg_hex);
+    $this->fg['-3'] = $this->calc_fg( $this->bg['-3'], $fg_hex);
+    $this->fg['-4'] = $this->calc_fg( $this->bg['-4'], $fg_hex);
+    $this->fg['-5'] = $this->calc_fg( $this->bg['-5'], $fg_hex);
+  }
+
+  //--------------------------------------------------
+  function lighten($hex, $percent) {
+    return $this->mix($hex, $percent, 255);
+  }
+
+  //--------------------------------------------------
+  function darken($hex, $percent) {
+    return $this->mix($hex, $percent, 0);
+  }
+
+  //--------------------------------------------------
+  function mix($hex, $percent, $mask) {
+
+    // Make sure inputs are valid
+    if (!is_numeric($percent) || $percent < 0 || $percent > 1) {
+      $this->raise_error("Percent=$percent is not valid.");
+      return FALSE;
+    }
+
+    if (!is_int($mask) || $mask < 0 || $mask > 255) {
+      $this->raise_error("Mask=$mask is not valid.");
+      return FALSE;
+    }
+
+    $rgb = $this->hex2rgb($hex);
+    if (!is_array($rgb)) {
+      // hex2rgb will raise an error
+      return FALSE;
+    }
+
+    for ($i=0; $i<3; $i++) {
+      $rgb[$i] = round($rgb[$i] * $percent) + round($mask * (1-$percent));
+      // In case rounding up causes us to go to 256
+      if ($rgb[$i] > 255) {
+        $rgb[$i] = 255;
+      }
+    }
+    return $this->rgb2hex($rgb);
+  }
+
+  //--------------------------------------------------
+  function hex2rgb($hex) {
+    //
+    // Given a hex color (rrggbb or rgb),
+    // returns an array (r, g, b) with decimal values
+    // If $hex is not the correct format,
+    // returns false.
+    //
+    // example:
+    // $d = hex2rgb('#abc');
+    // if (!$d) { error }
+
+    // Regexp for a valid hex digit
+    $d = '[a-fA-F0-9]';
+    
+    // Make sure $hex is valid
+    if (preg_match("/^($d$d)($d$d)($d$d)\$/", $hex, $rgb)) {
+      
+      return array(
+        hexdec($rgb[1]),
+        hexdec($rgb[2]),
+        hexdec($rgb[3])
+      );
+    }
+    if (preg_match("/^($d)($d)($d)$/", $hex, $rgb)) {
+      
+      return array(
+        hexdec($rgb[1] . $rgb[1]),
+        hexdec($rgb[2] . $rgb[2]),
+        hexdec($rgb[3] . $rgb[3])
+      );
+    }
+
+    $this->raise_error("Cannot convert hex '$hex' to RGB.");
+    return FALSE;
+  }
+
+  //--------------------------------------------------
+  function rgb2hex($rgb) {
+    // Given an array(rval,gval,bval) consisting of
+    // decimal color values (0-255), returns a hex string
+    // suitable for use with CSS.
+    // Returns false if the input is not in the correct format.
+    // Example:
+    // $h = rgb2hex(array(255,0,255));
+    // if (!$h) { error };
+
+    // Make sure the input is valid
+    if (!$this->is_rgb($rgb)) {
+      $this->raise_error("RGB value is not valid.");
+      return FALSE;
+    }
+
+    $hex = "";
+    for ($i=0; $i < 3; $i++) {
+
+      // Convert the decimal digit to hex
+      $hex_digit = dechex($rgb[$i]);
+
+      // Add a leading zero if necessary
+      if (strlen($hex_digit) == 1) {
+        $hex_digit = "0" . $hex_digit;
+      }
+
+      // Append to the hex string
+      $hex .= $hex_digit;
+    }
+
+    // Return the complete hex string
+    return $hex;
+  }
+
+  //--------------------------------------------------
+  function is_hex($hex) {
+    // Returns true if $hex is a valid CSS hex color.
+    // The "#" character at the start is optional.
+
+    // Regexp for a valid hex digit
+    $d = '[a-fA-F0-9]';
+    
+    // Make sure $hex is valid
+    if (preg_match("/^#?$d$d$d$d$d$d\$/", $hex) ||
+      preg_match("/^#?$d$d$d\$/", $hex)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  //--------------------------------------------------
+  function is_rgb($rgb) {
+    // Returns true if $rgb is an array with three valid
+    // decimal color digits.
+
+    if (!is_array($rgb) || count($rgb) != 3) {
+      return FALSE;
+    }
+
+    for ($i=0; $i < 3; $i++) {
+
+      // Get the decimal digit
+      $dec = intval($rgb[$i]);
+
+      // Make sure the decimal digit is between 0 and 255
+      if (!is_int($dec) || $dec < 0 || $dec > 255) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  //--------------------------------------------------
+  function calc_fg($bg_hex, $fg_hex) {
+    // Given a background color $bg_hex and a foreground color $fg_hex,
+    // modifies the foreground color so it will have enough contrast
+    // to be seen against the background color.
+    //
+    // The following parameters are used:
+    // $this->min_bright_diff
+    // $this->min_color_diff
+
+    // Loop through brighter and darker versions
+    // of the foreground color.
+    // The numbers here represent the amount of
+    // foreground color to mix with black and white.
+    foreach (array(1, 0.75, 0.5, 0.25, 0) as $percent) {
+
+      $darker = $this->darken($fg_hex, $percent);
+      $lighter = $this->lighten($fg_hex, $percent);
+
+      $darker_bright_diff  = $this->brightness_diff($bg_hex, $darker);
+      $lighter_bright_diff = $this->brightness_diff($bg_hex, $lighter);
+
+      if ($lighter_bright_diff > $darker_bright_diff) {
+        $new_fg = $lighter;
+        $new_fg_bright_diff = $lighter_bright_diff;
+      }
+      else {
+        $new_fg = $darker;
+        $new_fg_bright_diff = $darker_bright_diff;
+      }
+      $new_fgColorDiff = $this->color_diff($bg_hex, $new_fg);
+
+      if ($new_fg_bright_diff >= $this->min_bright_diff && $new_fgColorDiff >= $this->min_color_diff) {
+        break;
+      }
+    }
+
+    return $new_fg;
+  }
+
+  //--------------------------------------------------
+  function get_min_bright_diff() {
+    return $this->min_bright_diff;
+  }
+  function set_min_bright_diff($b, $reset_palette = TRUE) {
+    $this->min_bright_diff = $b;
+    if ($reset_palette) {
+      $this->set_palette($this->bg[0], $this->fg[0]);
+    }
+  }
+
+  //--------------------------------------------------
+  function get_min_color_diff() {
+    return $this->min_color_diff;
+  }
+  function set_min_color_diff($d, $reset_palette = TRUE) {
+    $this->min_color_diff = $d;
+    if ($reset_palette) {
+      $this->set_palette($this->bg[0], $this->fg[0]);
+    }
+  }
+
+  //--------------------------------------------------
+  function brightness($hex) {
+    // Returns the brightness value for a color,
+    // a number between zero and 178.
+    // To allow for maximum readability, the difference between
+    // the background brightness and the foreground brightness
+    // should be greater than 125.
+
+    $rgb = $this->hex2rgb($hex);
+    if (!is_array($rgb)) {
+      // hex2rgb will raise an error
+      return FALSE;
+    }
+
+    return ( (($rgb[0] * 299) + ($rgb[1] * 587) + ($rgb[2] * 114)) / 1000 );
+  }
+
+  //--------------------------------------------------
+  function brightness_diff($hex1, $hex2) {
+    // Returns the brightness value for a color,
+    // a number between zero and 178.
+    // To allow for maximum readability, the difference between
+    // the background brightness and the foreground brightness
+    // should be greater than 125.
+
+    $b1 = $this->brightness($hex1);
+    $b2 = $this->brightness($hex2);
+    if (is_bool($b1) || is_bool($b2)) {
+      return FALSE;
+    }
+    return abs($b1 - $b2);
+  }
+
+  //--------------------------------------------------
+  function color_diff($hex1, $hex2) {
+    // Returns the contrast between two colors,
+    // an integer between 0 and 675.
+    // To allow for maximum readability, the difference between
+    // the background and the foreground color should be > 500.
+
+    $rgb1 = $this->hex2rgb($hex1);
+    $rgb2 = $this->hex2rgb($hex2);
+
+    if (!is_array($rgb1) || !is_array($rgb2)) {
+      // hex2rgb will raise an error
+      return -1;
+    }
+
+    $r1 = $rgb1[0];
+    $g1 = $rgb1[1];
+    $b1 = $rgb1[2];
+
+    $r2 = $rgb2[0];
+    $g2 = $rgb2[1];
+    $b2 = $rgb2[2];
+
+    return (abs($r1-$r2) + abs($g1-$g2) + abs($b1-$b2));
+  }
+
+  //--------------------------------------------------
+  function raise_error($message) {
+    drupal_set_message(t($message), 'error');
+  }
+
+}
+
+/**
+ * Returns a color scheme given a base color.
+ *
+ * @param $base_color
+ *   A base color as a hex value.
+ */
+function color_scheme_create($base_color, $fg_color = '') {
+  return new color_scheme($base_color, $fg_color);
+}
+
+/**
+ * Lighten a given hex color value.
+ *
+ * @param $hex
+ *   The hex value of the color to lighten.
+ * @param $percent
+ *   The percentage of the lightening mask.
+ * @return
+ *   The hex value of the lightened color.
+ */
+function color_scheme_lighten($hex, $percent) {
+  $colors = new color_scheme($hex);
+  return $colors->lighten($hex, $percent);
+}
+
+/**
+ * Darken a given hex color value.
+ *
+ * @param $hex
+ *   The hex value of the color to darken.
+ * @param $percent
+ *   The percentage of the darkening mask.
+ * @return
+ *   The hex value of the darkened color.
+ */
+function color_scheme_darken($hex, $percent) {
+  $colors = new color_scheme($hex);
+  return $colors->darken($hex, $percent);
+}
+
+/**
+ * Mix a given hex color value with another by a given percentage.
+ *
+ * @param $hex
+ *   The hex value of the original color.
+ * @param $percent
+ *   The percentage of the mask.
+ * @param $mask
+ *   The hex color value of the mask.
+ * @return
+ *   The hex value of the mixed color.
+ */
+function color_scheme_mix($hex, $percent, $mask) {
+  $colors = new color_scheme($hex);
+  return $colors->mix($hex, $percent, $mask);
+}
+
+/**
+ * Validate a CSS hex color.
+ *
+ * @param $hex
+ *   A hex color value.
+ * @return
+ *   TRUE if $hex is a valid CSS hex color. False otherwise.
+ */
+function color_scheme_is_hex($hex) {
+  // The "#" character at the start is optional.
+  // Regexp for a valid hex digit
+  $d = '[a-fA-F0-9]';
+  
+  // Make sure $hex is valid
+  if (preg_match("/^#?$d$d$d$d$d$d\$/", $hex) || preg_match("/^#?$d$d$d\$/", $hex)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
