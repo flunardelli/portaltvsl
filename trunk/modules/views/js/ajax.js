@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.25.2.7 2010/01/22 06:15:40 merlinofchaos Exp $
+// $Id: ajax.js,v 1.25.2.10 2010/03/12 01:33:23 merlinofchaos Exp $
 /**
  * @file ajax_admin.js
  *
@@ -79,13 +79,15 @@ Drupal.Views.Ajax.ajaxResponse = function(data) {
 
     Drupal.attachBehaviors(ajax_area);
   }
-  else {
+  else if (!data.tab) {
     // If no display, reset the form.
     Drupal.Views.Ajax.setForm('', Drupal.settings.views.ajax.defaultForm);
     //Enable the save button.
     $('#edit-save').removeAttr('disabled');
     // Trigger an update for the live preview when we reach this state:
-    $('#views-ui-preview-form').trigger('submit');
+    if ($('#views-ui-preview-form input#edit-live-preview').is(':checked')) {
+      $('#views-ui-preview-form').trigger('submit');
+    }
   }
 
   // Go through the 'add' array and add any new content we're instructed to add.
@@ -107,15 +109,19 @@ Drupal.Views.Ajax.ajaxResponse = function(data) {
   // Go through and add any requested tabs
   if (data.tab) {
     for (id in data.tab) {
-      $('#views-tabset').addTab(id, data.tab[id]['title'], 0);
+      // Retrieve the tabset instance by stored ID.
+      var instance = Drupal.Views.Tabs.instances[$('#views-tabset').data('UI_TABS_UUID')];
+      instance.add(id, data.tab[id]['title'], 0);
+      instance.click(instance.$tabs.length);
+
       $(id).html(data.tab[id]['body']);
       $(id).addClass('views-tab');
-      Drupal.attachBehaviors(id);
 
-      // This is kind of annoying, but we have to actually to find where the new
-      // tab is.
-      var instance = $.ui.tabs.instances[$('#views-tabset').get(0).UI_TABS_UUID];
-      $('#views-tabset').clickTab(instance.$tabs.length);
+      // Update the preview widget to preview the new tab.
+      var display_id = id.replace('#views-tab-', '');
+      $("#preview-display-id").append('<option selected="selected" value="' + id + '">' + data.tab[id]['title'] + '</option>');
+
+      Drupal.attachBehaviors(id);
     }
   }
 
@@ -311,6 +317,19 @@ Drupal.behaviors.ViewsAjaxLinks = function() {
 }
 
 /**
+ * Sync preview display.
+ */
+Drupal.behaviors.syncPreviewDisplay = function() {
+  $("#views-tabset a").click(function() {
+    var href = $(this).attr('href');
+    // Cut of #views-tabset.
+    var display_id = href.substr(11);
+    // Set the form element.
+    $("#views-live-preview #preview-display-id").val(display_id);
+  });
+}
+
+/**
  * Get rid of irritating tabledrag messages
  */
 Drupal.theme.tableDragChangedWarning = function () {
@@ -347,7 +366,7 @@ Drupal.Views.Ajax.handleErrors = function (xhr, path) {
   alert(Drupal.t("An error occurred at @path.\n\nError Description: @error", {'@path': path, '@error': error_text}));
 }
 
-// $Id: ajax.js,v 1.25.2.7 2010/01/22 06:15:40 merlinofchaos Exp $
+// $Id: ajax.js,v 1.25.2.10 2010/03/12 01:33:23 merlinofchaos Exp $
 
 Drupal.behaviors.ViewsGroupedTableDrag = function(context) {
   var table_id = 'arrange';

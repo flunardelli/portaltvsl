@@ -1,5 +1,5 @@
 <?php
-// $Id: views_plugin_display.inc,v 1.20.2.31 2010/01/25 22:37:48 merlinofchaos Exp $
+// $Id: views_plugin_display.inc,v 1.20.2.37 2010/04/06 20:18:57 merlinofchaos Exp $
 /**
  * @file
  * Contains the base display plugin.
@@ -84,6 +84,7 @@ class views_plugin_display extends views_plugin {
     // not compatible with previous version of views
     // This code converts old values into a configured handler for each area
     foreach (array('header', 'footer', 'empty') as $area) {
+      $converted = FALSE;
       if (isset($this->options[$area]) && !is_array($this->options[$area])) {
         if (!empty($this->options[$area])) {
           $content = $this->get_option($area);
@@ -104,8 +105,13 @@ class views_plugin_display extends views_plugin {
               $options['empty'] = $empty;
             }
             $this->set_option($area, array('text' => $options));
+            $converted = TRUE;
           }
         }
+      }
+      // Ensure that options are at least an empty array
+      if (!$converted) {
+        $this->set_option($area, array());
       }
     }
   }
@@ -249,6 +255,7 @@ class views_plugin_display extends views_plugin {
       'access' => array('access'),
       'cache' => array('cache'),
       'title' => array('title'),
+      'css_class' => array('css_class'),
       'use_ajax' => array('use_ajax'),
       'items_per_page' => array('items_per_page', 'offset', 'use_pager', 'pager_element'),
       'pager' => array('pager'),
@@ -266,7 +273,7 @@ class views_plugin_display extends views_plugin {
 
       // These guys are special
       'header' => array('header'),
-      'footer' => array('empty'),
+      'footer' => array('footer'),
       'empty' => array('empty'),
       'relationships' => array('relationships'),
       'fields' => array('fields'),
@@ -315,6 +322,7 @@ class views_plugin_display extends views_plugin {
           'access' => TRUE,
           'cache' => TRUE,
           'title' => TRUE,
+          'css_class' => TRUE,
 
           'use_ajax' => TRUE,
           'items_per_page' => TRUE,
@@ -353,6 +361,10 @@ class views_plugin_display extends views_plugin {
       'title' => array(
         'default' => '',
         'translatable' => TRUE,
+      ),
+      'css_class' => array(
+        'default' => '',
+        'translatable' => FALSE,
       ),
       'use_ajax' => array(
         'default' => FALSE,
@@ -701,6 +713,35 @@ class views_plugin_display extends views_plugin {
   }
 
   /**
+   * Retrieve a list of fields for the current display with the
+   *  relationship associated if it exists.
+   */
+  function get_field_labels() {
+    $options = array();
+    foreach ($this->get_handlers('relationship') as $relationship => $handler) {
+      if ($label = $handler->label()) {
+        $relationships[$relationship] = $label;
+      }
+      else {
+        $relationships[$relationship] = $handler->ui_name();
+      }
+    }
+
+    foreach ($this->get_handlers('field') as $id => $handler) {
+      if ($label = $handler->label()) {
+        $options[$id] = $label;
+      }
+      else {
+        $options[$id] = $handler->ui_name();
+      }
+      if (!empty($handler->options['relationship']) && !empty($relationships[$handler->options['relationship']])) {
+        $options[$id] = '(' . $relationships[$handler->options['relationship']] . ') ' . $options[$id];
+      }
+    }
+    return $options;
+  }
+
+  /**
    * Intelligently set an option either from this display or from the
    * default display, if directed to do so.
    */
@@ -974,6 +1015,18 @@ class views_plugin_display extends views_plugin {
       $options['exposed_form']['links']['exposed_form_options'] = t('Exposed form settings for this exposed form style.');
     }
 
+    $css_class = check_plain(trim($this->get_option('css_class')));
+    if (!$css_class) {
+      $css_class = t('None');
+    }
+
+    $options['css_class'] = array(
+      'category' => 'style',
+      'title' => t('CSS class'),
+      'value' => $css_class,
+      'desc' => t('Change the CSS class name(s) that will be added to this display.'),
+    );
+
     $options['analyze-theme'] = array(
       'category' => 'style',
       'title' => t('Theme'),
@@ -1027,6 +1080,14 @@ class views_plugin_display extends views_plugin {
           '#type' => 'textfield',
           '#description' => t('This title will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc.'),
           '#default_value' => $this->get_option('title'),
+        );
+        break;
+      case 'css_class':
+        $form['#title'] .= t('CSS class');
+        $form['css_class'] = array(
+          '#type' => 'textfield',
+          '#description' => t('The CSS class names will be added to the view. This enables you to use specific CSS code for each view. You may define multiples classes separated by spaces.'),
+          '#default_value' => $this->get_option('css_class'),
         );
         break;
       case 'use_ajax':
@@ -1598,6 +1659,12 @@ class views_plugin_display extends views_plugin {
    */
   function options_validate(&$form, &$form_state) {
     switch ($form_state['section']) {
+      case 'css_class':
+        $css_class = $form_state['values']['css_class'];
+        if (preg_match('/[^a-zA-Z0-9- ]/', $css_class)) {
+          form_error($form['css_class'], t('CSS classes must be alphanumeric or dashes only.'));
+        }
+      break;
       case 'display_id':
         if ($form_state['values']['display_id']) {
           foreach ($this->view->display as $id => $display) {
@@ -1707,6 +1774,7 @@ class views_plugin_display extends views_plugin {
         }
         break;
       case 'title':
+      case 'css_class':
       case 'link_display':
         $this->set_option($section, $form_state['values'][$section]);
         break;

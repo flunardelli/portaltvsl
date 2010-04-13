@@ -1,0 +1,80 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #01282E;
+}
+
+#radio-player #displayArtist {
+    color: #fff;
+    font-size: 12px;
+    width:120px;
+    text-align:center;
+	line-height: 25px;
+	float: right;
+	margin-left:-20px;
+	position: absolute;
+}
+
+#radio-player #displayTitle {
+    color: #7FB535;
+    font-size: 9px;
+}
+
+#radio-player .logo {
+    float: left;
+    width: 100px;
+}
+
+#radio-player .logo img {
+    width: 100px;
+    margin-left:1px;
+    margin-top:5px;
+}
+
+#radio-player .content #controls {
+    vertical-align:top;
+    line-height: 20px;
+}
+
+#radio-player .content {
+  height: 64px;
+  width: 140px;
+  padding-left: 10px;
+  margin: 0 auto;
+  float:right;
+}
+
+#radio-player {
+    color:#FFFFFF;
+    font-family:arial,verdana,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    height:64px;
+    letter-spacing:0;
+    padding:0;
+    width: 250px;
+    word-spacing:1.4pt;
+	margin-top: 0;
+}
+
+#radio-player #info {
+    font-size: 9px;
+}
+
+#radio-player #stt{
+    color: #81C778;
+    font: normal bold 10px arial, sans-serif;
+}
+
+a img {
+    border: 0;
+}
+a, a:visited {
+    font-size: 9px;
+    color: #fff;
+}
+
+#radio-player marquee {
+    margin-left:15px;
+}
+																																						

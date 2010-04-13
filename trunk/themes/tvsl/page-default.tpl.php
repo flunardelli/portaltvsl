@@ -164,8 +164,10 @@
           <div id="mission"><?php print $mission; ?></div>
         <?php endif; ?>
 
-
-        <?php print $breadcrumb; ?>
+        <?php 
+		  //print $breadcrumb;
+		?>
+		 
         <?php if ($title): ?>
           <h1 class="title"><?php print $title; ?></h1>
         <?php endif; ?>

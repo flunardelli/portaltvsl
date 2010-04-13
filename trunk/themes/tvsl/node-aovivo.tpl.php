@@ -175,7 +175,9 @@ $snapshot = $base_url . '/themes/tvsl/images/tvsl-banner-logo.png';
 	  <ul>
 	  <li><b>Arquivo: </b>	<img class="field-icon-ogv" alt="<?php print $node->current_video_upload_file->filemime ?> icon" src="<?php print $base_url.'/modules/filefield/icons/protocons/16x16/mimetypes/video-x-generic.png' ?>" />
 <a href="<?php print $node->field_urlstream[0]["value"] ?>" type="video/ogv"><?php print substr(strrchr($node->field_urlstream[0]["value"], "/"),1)?></a></li>
-	  <li><b>Data: </b><?php print $node->field_aovivodatetime[0]["view"]?></li>
+	  <? if($node->field_aovivodatetime[0]["view"]){ ?>
+		<li><b>Data: </b><?php print $node->field_aovivodatetime[0]["view"]?></li>
+	  <? }?>
 	  <li><b>Estado: </b><?php print $node->field_aovivo_status[0]["view"]?></li>
 	  </ul>
 	</div>

@@ -1,0 +1,49 @@
+#!/bin/sh
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 filename"
+    exit
+fi
+
+meta=("comment" "license" "copyright" "artist" "title" "location" "date" "organization")
+for i in $@; do
+    test -f $i || continue
+    echo $i
+    IFST=$IFS
+    IFS=$'\n'
+    #out=()
+    for l in $(/usr/bin/ogginfo $i); do
+        IFS=$IFST
+	for m in ${meta[@]}; do
+	    d=$(echo $l | grep "${m}=" | cut -d'=' -f2)
+	    if [ "$d" ]; then 
+	    	index=${#out[@]}
+		d=`expr match "$d" '[ \t\n]*\(.*[^ \t\n]\)[ \t\n]*$'`
+		out[$index]=$d
+		#out[$index + 1]='|'
+	    fi
+	done
+	IFS=$'\n'
+    done
+    
+    
+    
+    #out[${#out[@]}]=$i
+    
+    for l in ${out[*]}; do
+	echo -n ${l}';' 
+    done
+    #echo ${out[*]}    
+    IFS=$IFST
+    
+    #data=$(/usr/bin/ogginfo $i)
+done
+
+#comment=Trilha: Desktop
+#license=CC - BR - BY - SA
+#copyright=2009 ASL.org
+#artist=Thomaz Philippe C. Silva, Mauricio Lin, Roberto dos Santos
+#title=Introdução ao Apache Lucene: Inserindo busca eficiente ao seu projeto
+#location=Porto Alegre, Brasil
+#date=2009
+#organization=ASL.org
