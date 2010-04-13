@@ -1,5 +1,5 @@
 <?php
-// $Id: views_plugin_pager_full.inc,v 1.1.2.3 2010/01/19 21:50:01 merlinofchaos Exp $
+// $Id: views_plugin_pager_full.inc,v 1.1.2.6 2010/03/22 20:05:05 merlinofchaos Exp $
 
 /**
  * The plugin to handle full pager.
@@ -98,7 +98,7 @@ class views_plugin_pager_full extends views_plugin_pager {
       '#type' => 'textfield',
       '#title' => t('Exposed items per page options'),
       '#required' => TRUE,
-      '#description' => t('Set between which values the user can choose when determining the items per page. Separated by colon.'),
+      '#description' => t('Set between which values the user can choose when determining the items per page. Separated by comma.'),
       '#default_value' => $this->options['expose']['items_per_page_options'],
       '#process' => array('views_process_dependency'),
       '#dependency' => array(
@@ -109,8 +109,8 @@ class views_plugin_pager_full extends views_plugin_pager {
     $form['expose']['offset'] = array(
       '#type' => 'checkbox',
       '#title' => t('Expose Offset'),
-      '#description' => t('When checked, users can determine how many items per page show in a view'),
-      '#default_value' => $this->options['expose']['items_per_page'],
+      '#description' => t('When checked, users can determine how many items should be skipped at the beginning.'),
+      '#default_value' => $this->options['expose']['offset'],
     );
 
     $form['expose']['offset_label'] = array(
@@ -145,7 +145,7 @@ class views_plugin_pager_full extends views_plugin_pager {
       $error = TRUE;
     }
     if ($error) {
-      form_set_error('pager_options][expose][items_per_page_options', t('Please insert a list of integer numeric values separated by colons: e.g: 10, 20, 50, 100'));
+      form_set_error('pager_options][expose][items_per_page_options', t('Please insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
     }
   }
 
@@ -218,26 +218,29 @@ class views_plugin_pager_full extends views_plugin_pager {
       }
     }
 
-    // Dump information about what we already know into the globals.
-    global $pager_page_array, $pager_total, $pager_total_items;
+    // Don't set pager settings for items per page = 0.
+    $items_per_page = $this->get_items_per_page();
+    if (!empty($items_per_page)) {
+      // Dump information about what we already know into the globals.
+      global $pager_page_array, $pager_total, $pager_total_items;
+      // Set the item count for the pager.
+      $pager_total_items[$this->options['id']] = $this->total_items;
+      // Calculate and set the count of available pages.
+      $pager_total[$this->options['id']] = ceil($pager_total_items[$this->options['id']] / $this->get_items_per_page());
 
-    // Set the item count for the pager.
-    $pager_total_items[$this->options['id']] = $this->total_items;
-    // Calculate and set the count of available pages.
-    $pager_total[$this->options['id']] = ceil($pager_total_items[$this->options['id']] / $this->get_items_per_page());
+      // See if the requested page was within range:
+      if ($this->current_page < 0) {
+        $this->current_page = 0;
+      }
+      else if ($this->current_page >= $pager_total[$this->options['id']]) {
+        // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
+        $this->current_page = $pager_total[$this->options['id']] - 1;
+      }
 
-    // See if the requested page was within range:
-    if ($this->current_page < 0) {
-      $this->current_page = 0;
+      // Put this number in to guarantee that we do not generate notices when the pager
+      // goes to look for it later.
+      $pager_page_array[$this->options['id']] = $this->current_page;
     }
-    else if ($this->current_page >= $pager_total[$this->options['id']]) {
-      // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
-      $this->current_page = $pager_total[$this->options['id']] - 1;
-    }
-
-    // Put this number in to guarantee that we do not generate notices when the pager
-    // goes to look for it later.
-    $pager_page_array[$this->options['id']] = $this->current_page;
   }
 
   function uses_exposed() {

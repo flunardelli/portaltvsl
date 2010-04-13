@@ -1,5 +1,5 @@
 <?php
-// $Id: views.module,v 1.332.2.20 2010/01/19 21:50:01 merlinofchaos Exp $
+// $Id: views.module,v 1.332.2.28 2010/04/07 23:40:32 merlinofchaos Exp $
 /**
  * @file
  * Primarily Drupal hooks and global API functions to manipulate views.
@@ -196,7 +196,7 @@ function views_menu_alter(&$callbacks) {
   $views = views_get_applicable_views('uses hook menu');
   foreach ($views as $data) {
     list($view, $display_id) = $data;
-    $result = $view->execute_hook_menu($display_id);
+    $result = $view->execute_hook_menu($display_id, $callbacks);
     if (is_array($result)) {
       // The menu system doesn't support having two otherwise
       // identical paths with different placeholders.  So we
@@ -356,7 +356,11 @@ function views_block($op = 'list', $delta = 0, $edit = array()) {
         }
       }
 
-      variable_set('views_block_hashes', $hashes);
+      // Only save hashes if they have changed.
+      $old_hashes = variable_get('views_block_hashes', array());
+      if ($hashes != $old_hashes) {
+        variable_set('views_block_hashes', $hashes);
+      }
       // Save memory: Destroy those views.
       foreach ($views as $view) {
         $view->destroy();
@@ -419,6 +423,16 @@ function views_invalidate_cache() {
 }
 
 /**
+ * Access callback to determine if the user can import Views.
+ *
+ * View imports require an additional access check because they are PHP
+ * code and PHP is more locked down than administer views.
+ */
+function views_import_access() {
+  return user_access('administer views') && user_access('use PHP for block visibility');
+}
+
+/**
  * Determine if the logged in user has access to a view.
  *
  * This function should only be called from a menu hook or some other
@@ -428,10 +442,6 @@ function views_invalidate_cache() {
  * is accessible, then the view is accessible.
  */
 function views_access() {
-  if (user_access('access all views')) {
-    return TRUE;
-  }
-
   $args = func_get_args();
   foreach ($args as $arg) {
     if ($arg === TRUE) {
@@ -452,17 +462,29 @@ function views_access() {
 }
 
 /**
- * Access callback to determine if the logged in user has any of the
- * requested roles.
+ * Access callback for the views_plugin_access_perm access plugin.
  *
- * This must be in views.module as it is called by menu access callback
- * and can be called often.
+ * Determine if the specified user has access to a view on the basis of
+ * permissions. If the $account argument is omitted, the current user
+ * is used.
  */
-function views_check_roles($rids) {
+function views_check_perm($perm, $account = NULL) {
+  return user_access($perm, $account) || user_access('access all views', $account);
+}
+
+/**
+ * Access callback for the views_plugin_access_role access plugin.
+
+ * Determine if the specified user has access to a view on the basis of any of
+ * the requested roles. If the $account argument is omitted, the current user
+ * is used.
+ */
+function views_check_roles($rids, $account = NULL) {
   global $user;
-  $roles = array_keys($user->roles);
-  $roles[] = $user->uid ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
-  return array_intersect(array_filter($rids), $roles);
+  $account = isset($account) ? $account : $user;
+  $roles = array_keys($account->roles);
+  $roles[] = $account->uid ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
+  return user_access('access all views', $account) || array_intersect(array_filter($rids), $roles);
 }
 // ------------------------------------------------------------------
 // Functions to help identify views that are running or ran
@@ -720,18 +742,20 @@ function views_get_plugin($type, $plugin) {
  * @return
  *   A view object or NULL if it is not available.
  */
-function &views_get_default_view($view_name) {
+function &views_get_default_view($view_name, $reset = FALSE) {
   $null = NULL;
 
   // Attempt to load individually cached view from cache.
   views_include('cache');
-  $data = views_cache_get("views_default:{$view_name}", TRUE);
-  if (isset($data->data) && is_object($data->data)) {
-    return $data->data;
+  if (!$reset) {
+    $data = views_cache_get("views_default:{$view_name}", TRUE);
+    if (isset($data->data) && is_object($data->data)) {
+      return $data->data;
+    }
   }
 
   // Otherwise, allow entire cache to be rebuilt.
-  $cache = views_discover_default_views();
+  $cache = views_discover_default_views($reset);
   if (isset($cache[$view_name])) {
     return $cache[$view_name];
   }
@@ -759,12 +783,12 @@ function views_new_view() {
  *
  * @return An associative array of all known default views.
  */
-function views_discover_default_views() {
+function views_discover_default_views($reset = FALSE) {
   static $cache = array();
 
-  if (empty($cache)) {
+  if (empty($cache) || $reset) {
     views_include('cache');
-    $cache = _views_discover_default_views();
+    $cache = _views_discover_default_views($reset);
   }
   return $cache;
 }
@@ -839,7 +863,7 @@ function views_get_all_views($reset = FALSE) {
     // Get all default views.
     $status = variable_get('views_defaults', array());
 
-    foreach (views_discover_default_views() as $view) {
+    foreach (views_discover_default_views($reset) as $view) {
       // Determine if default view is enabled or disabled.
       if (isset($status[$view->name])) {
         $view->disabled = $status[$view->name];
@@ -877,7 +901,7 @@ function views_get_all_views($reset = FALSE) {
 function views_get_view($name, $reset = FALSE) {
   views_include('view');
   $view = view::load($name, $reset);
-  $default_view = views_get_default_view($name);
+  $default_view = views_get_default_view($name, $reset);
 
   if (empty($view) && empty($default_view)) {
     return;
@@ -1313,4 +1337,35 @@ function views_views_exportables($op = 'list', $views = NULL, $name = 'foo') {
 function views_microtime() {
   list($usec, $sec) = explode(' ', microtime());
   return (float)$sec + (float)$usec;
+}
+
+/**
+ * Trim the field down to the specified length.
+ *
+ * @param $alter
+ *   - max_length: Maximum lenght of the string, the rest gets truncated.
+ *   - word_boundary: Trim only on a word boundary.
+ *   - ellipsis: Trim only on a word boundary.
+ *   - html: Take sure that the html is correct.
+ */
+function views_trim_text($alter, $value) {
+  if (drupal_strlen($value) > $alter['max_length']) {
+    $value = drupal_substr($value, 0, $alter['max_length']);
+    if (!empty($alter['word_boundary'])) {
+      if (preg_match("/(.*)\b.+/us", $value, $matches)) {
+        $value = $matches[1];
+      }
+    }
+    // Remove scraps of HTML entities from the end of a strings
+    $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
+
+    if (!empty($alter['ellipsis'])) {
+      $value .= '...';
+    }
+  }
+  if (!empty($alter['html'])) {
+    $value = _filter_htmlcorrector($value);
+  }
+
+  return $value;
 }

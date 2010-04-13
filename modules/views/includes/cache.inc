@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.24.2.3 2010/01/05 01:44:46 merlinofchaos Exp $
+// $Id: cache.inc,v 1.24.2.5 2010/03/12 01:51:42 merlinofchaos Exp $
 /**
  * @file cache.inc
  *
@@ -96,14 +96,14 @@ function _views_fetch_plugin_data($type = NULL, $plugin = NULL) {
  *
  * @return An associative array of all known default views.
  */
-function _views_discover_default_views() {
+function _views_discover_default_views($reset = FALSE) {
   static $cache = NULL;
 
-  if (!isset($cache)) {
-    $index = views_cache_get('views_default_views_index');
+  if (!isset($cache) || $reset) {
+    $index = views_cache_get('views_default_views_index', TRUE);
 
     // Retrieve each cached default view
-    if (isset($index->data) && is_array($index->data)) {
+    if (!$reset && isset($index->data) && is_array($index->data)) {
       $cache = array();
       foreach ($index->data as $view_name) {
         $data = views_cache_get('views_default:' . $view_name, TRUE);
@@ -115,10 +115,9 @@ function _views_discover_default_views() {
     // If missing index, rebuild the cache
     else {
       views_include_default_views();
-      $defaults = module_invoke_all('views_default_views');
       $cache = array();
 
-      foreach(module_implements('views_default_views') as $module) {
+      foreach (module_implements('views_default_views') as $module) {
         $results = call_user_func($module . "_views_default_views");
         if (!empty($results) && is_array($results)) {
           foreach($results as $name => $view) {
@@ -142,7 +141,7 @@ function _views_discover_default_views() {
 
       // Cache the index
       $index = array_keys($cache);
-      views_cache_set('views_default_views_index', $index);
+      views_cache_set('views_default_views_index', $index, TRUE);
 
       // Cache each view
       foreach ($cache as $name => $view) {

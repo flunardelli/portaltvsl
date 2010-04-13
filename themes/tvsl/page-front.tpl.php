@@ -214,7 +214,7 @@
 
       <?php print $sidebar_second; ?>
 
-    </div> <!-- /#main, /#main-wrapper -->
+    </div></div> <!-- /#main, /#main-wrapper -->
 
   </div>
   <div class="clearfooter"></div>
@@ -225,8 +225,8 @@
   <?php print $closure; ?>
 
     <?php if ($footer || $footer_message || $secondary_links): ?>
-      <div id="footer"><div class="section">
-
+      <div id="footer">
+	  <div class="section">
         <?php print theme('links', $secondary_links, array('id' => 'secondary-menu', 'class' => 'links clearfix')); ?>
 
         <?php if ($footer_message): ?>
@@ -235,7 +235,8 @@
 
         <?php print $footer; ?>
 
-      </div></div> <!-- /.section, /#footer -->
+      </div>
+	</div> <!-- /.section, /#footer -->
     <?php endif; ?>
 </div>
 </body>

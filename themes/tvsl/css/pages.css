@@ -618,9 +618,9 @@ div.pane-content .jcarousel-clip-horizontal {
     font-style:normal;
     font-variant:normal;
     font-weight:normal;
-	margin:0 10%;
-	position: absolute;
-/*    line-height:10px;*/
+	margin:10px; 10%;
+/*	position: absolute;
+    line-height:10px; */
     text-align:center;
 }
 
@@ -819,20 +819,7 @@ html { overflow-y: scroll; }
 
 #page-wrapper { 
 }
-/*
-#footer { 
-    position: fixed; 
-    clear: both; 
-    width: 100%; 
-    height: 45px; 
-    bottom: 0; 
-    padding: 0;
-    text-align: center; 
-    color: #fff; 
-    z-index:999;
-    vertical-align: middle;
-} 
-*/
+
 #footer-push, #footer {
   height:45px;
 }
@@ -841,7 +828,14 @@ html { overflow-y: scroll; }
   bottom:0;
   font-size:9px;
   margin:0 auto;
-  position:relative;
+  position: absolute;
+  text-align:center;
+}
+
+#footer {
+  bottom:0;
+  width:100%;
+  height:45px;
 }
 
 .panel-3col-33-stacked .panel-col-top .inside {
@@ -918,10 +912,14 @@ td.active {
 }
 
 .view-view-aovivolist .view-content  {
-    float:left;
     margin-top:20px;
+	background: url("../images/calendar-icon.png") no-repeat right 40px;
+}
+
+.view-view-aovivolist .view-content table {
     width:710px;
 }
+
 
 .view-view-aovivolist .view-content .views-field-image-attach-images img {
     padding-bottom:0;
@@ -1182,12 +1180,6 @@ div#calpopup-body div.node {
   padding-bottom:45px;
 }
 
-#footer {
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:45px;
-}
 
 .panel-col-bottom {
   margin-left: 45px;
@@ -1228,3 +1220,51 @@ hr {
 .view-view-destaques .views-view-grid td {
   width:195px;
 }
+
+.calendar-calendar a:link {
+  color: #000000;
+}
+
+#chatroom-container a {
+  color: #2A4428;
+}
+
+#radiosl-blog .panel-col-first {
+  width: 70%;
+}
+
+#radiosl-blog .panel-col-last {
+  width: 30%;
+}
+
+#radiosl-blog #chatroom-container {
+  width: 255px;
+}
+
+#radiosl-blog #chatroom-board, #radiosl-blog #chatroom-chat-form div.item-list {
+  width: 200px;
+}
+
+#radiosl-blog #chatroom-container #chatroom-chat-buttons textarea {
+  width: 190px;
+}
+
+#radiosl-blog #chatroom-container .resizable-textarea {
+  width: 190px;
+}
+
+.section-category .node-type-video .content > a:first-child {
+  float: left;
+}
+.section-category .node-type-video .content br.video_image_clear {
+  clear: none;
+}
+
+.section-category .node-type-video .content #video-content {
+  margin:5px 20px;
+}
+
+.node-type-video #video-content p {
+  text-align:justify;
+}
+

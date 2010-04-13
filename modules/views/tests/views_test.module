@@ -1,5 +1,21 @@
 <?php
-// $Id: views_test.module,v 1.1.4.2 2009/12/22 00:38:03 merlinofchaos Exp $
+// $Id: views_test.module,v 1.1.4.4 2010/02/13 21:01:42 dereine Exp $
+
+/**
+ * Implements hook_perm().
+ */
+function views_test_perm() {
+  return array('views_test test permission');
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function views_test_views_api() {
+  return array(
+    'api' => 3.0,
+  );
+}
 
 /**
  * Implements hook_views_data()

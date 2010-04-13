@@ -1,5 +1,5 @@
 <?php
-// $Id: views_handler_field_upload_description.inc,v 1.3.2.3 2010/01/19 21:59:04 merlinofchaos Exp $
+// $Id: views_handler_field_upload_description.inc,v 1.3.2.4 2010/04/07 23:40:32 merlinofchaos Exp $
 
 /**
  * Field handler to provide a list of roles.
@@ -51,7 +51,7 @@ class views_handler_field_upload_description extends views_handler_field {
   }
 
   function render($values) {
-    return $this->render_link($values->{$this->field_alias}, $values);
+    return $this->render_link(check_plain($values->{$this->field_alias}), $values);
   }
 
   /**
