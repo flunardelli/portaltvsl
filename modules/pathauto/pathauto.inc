@@ -1,83 +1,32 @@
 <?php
-// $Id: pathauto.inc,v 1.56.2.12 2010/03/03 05:46:09 davereid Exp $
+// $Id: pathauto.inc,v 1.45.2.10 2010/02/20 03:05:19 davereid Exp $
 
 /**
  * @file
  * Miscellaneous functions for Pathauto.
  *
- * This also contains some constants giving human readable names to some numeric
- * settings; they're included here as they're only rarely used outside this file
- * anyway. Use _pathauto_include() if the constants need to be available.
- *
  * @ingroup pathauto
  */
-
-/**
- * Case should be left as is in the generated path.
- */
-define('PATHAUTO_CASE_LEAVE_ASIS', 0);
-
-/**
- * Case should be lowercased in the generated path.
- */
-define('PATHAUTO_CASE_LOWER', 1);
-
-/**
- * "Do nothing. Leave the old alias intact."
- */
-define('PATHAUTO_UPDATE_ACTION_NO_NEW', 0);
-
-/**
- * "Create a new alias. Leave the existing alias functioning."
- */
-define('PATHAUTO_UPDATE_ACTION_LEAVE', 1);
-
-/**
- * "Create a new alias. Delete the old alias."
- */
-define('PATHAUTO_UPDATE_ACTION_DELETE', 2);
-
-/**
- * "Create a new alias. Redirect from old alias."
- *
- * This is only available when the Path Redirect module is.
- */
-define('PATHAUTO_UPDATE_ACTION_REDIRECT', 3);
-
-/**
- * Remove the punctuation from the alias.
- */
-define('PATHAUTO_PUNCTUATION_REMOVE', 0);
-
-/**
- * Replace the punctuation with the separator in the alias.
- */
-define('PATHAUTO_PUNCTUATION_REPLACE', 1);
-
-/**
- * Leave the punctuation as it is in the alias.
- */
-define('PATHAUTO_PUNCTUATION_DO_NOTHING', 2);
 
 /**
  * Check to see if there is already an alias pointing to a different item.
  *
  * @param $alias
- *   A string alias.
- * @param $source
+ *   A string alias (i.e. dst).
+ * @param $src
  *   A string that is the internal path.
  * @param $language
  *   A string indicating the path's language.
  * @return
  *   TRUE if an alias exists, FALSE if not.
  */
-function _pathauto_alias_exists($alias, $source, $language = '') {
-  $alias_pid = db_result(db_query_range("SELECT pid FROM {url_alias} WHERE dst = '%s' AND src <> '%s' AND language = '%s'", array($alias, $source, $language), 0, 1));
-  if (module_exists('path_redirect') && function_exists('path_redirect_delete_multiple')) {
+function _pathauto_alias_exists($alias, $src, $language = '') {
+  $alias_pid = db_result(db_query_range("SELECT pid FROM {url_alias} WHERE dst = '%s' AND src <> '%s' AND language = '%s'", array($alias, $src, $language), 0, 1));
+  if (function_exists('path_redirect_delete_multiple')) {
     // Delete from path_redirect the exact same alias to the same node.
-    path_redirect_delete_multiple(NULL, array('source' => $alias, 'redirect' => $source));
+    path_redirect_delete_multiple(NULL, array('source' => $alias, 'redirect' => $src));
 
-    // If there still is this alias used in path_redirect, then create a different alias.
+    // If there still is this alias used in path_redirect, then create a different alias
     $redirects = path_redirect_load_multiple(NULL, array('source' => $alias));
   }
   if ($alias_pid || !empty($redirects)) {
@@ -92,31 +41,31 @@ function _pathauto_alias_exists($alias, $source, $language = '') {
  * Returns old alias and pid if there is already an alias
  * pointing to a different item.
  *
- * @param $source
+ * @param $src
  *   A string that is the internal path.
  * @return
  *   An array with the keys "pid" and "old_alias" containing
  *   the "pid" and old "alias", respectively, of the old alias.
  */
-function _pathauto_existing_alias_data($source) {
+function _pathauto_existing_alias_data($src) {
   $output = array(
     'pid' => '',
     'old_alias' => ''
   );
-  $result = db_query("SELECT pid, dst FROM {url_alias} WHERE src = '%s'", $source);
+  $result = db_query("SELECT pid, dst FROM {url_alias} WHERE src='%s'", $src);
   if ($data = db_fetch_object($result)) {
     // The item is already aliased, check what to do...
-    switch (variable_get('pathauto_update_action', PATHAUTO_UPDATE_ACTION_DELETE)) {
+    switch (variable_get('pathauto_update_action', 2)) {
       // Replace old alias - remember the pid to update
-      case PATHAUTO_UPDATE_ACTION_DELETE:
-      case PATHAUTO_UPDATE_ACTION_REDIRECT:
+      case 2:
+      case 3:
         $output['pid'] = $data->pid;
       // Add new alias in addition to old one
-      case PATHAUTO_UPDATE_ACTION_LEAVE:
+      case 1:
         $output['old_alias'] = $data->dst;
         break;
       // Do nothing
-      case PATHAUTO_UPDATE_ACTION_NO_NEW:
+      case 0:
       default:
         break;
     }
@@ -149,8 +98,9 @@ function pathauto_cleanstring($string, $clean_slash = TRUE) {
   $output = $string;
   $punctuation = pathauto_punctuation_chars();
   foreach ($punctuation as $name => $details) {
-    $action = variable_get('pathauto_punctuation_' . $name, PATHAUTO_PUNCTUATION_REMOVE);
-    if ($action != PATHAUTO_PUNCTUATION_DO_NOTHING) {
+    $action = variable_get('pathauto_punctuation_'. $name, 0);
+    // 2 is the action for "do nothing" with the punctuation
+    if ($action != 2) {
       // Slightly tricky inline if which either replaces with the separator or nothing
       $output = str_replace($details['value'], ($action ? $separator : ''), $output);
     }
@@ -161,24 +111,30 @@ function pathauto_cleanstring($string, $clean_slash = TRUE) {
     $output = str_replace('/', '', $output);
   }
 
-  // Optionally transliterate (by running through the Transliteration module)
+  // Optionally remove accents and transliterate
   if (variable_get('pathauto_transliterate', FALSE)) {
-    if (module_exists('transliteration')) {
-      $output = transliteration_get($output);
+    static $i18n_loaded = false;
+    static $translations = array();
+
+    if (!$i18n_loaded) {
+      $path = drupal_get_path('module', 'pathauto');
+      if (is_file($path .'/i18n-ascii.txt')) {
+        $translations = parse_ini_file($path .'/i18n-ascii.txt');
+      }
+      $i18n_loaded = true;
     }
-    else {
-      drupal_set_message(t('Pathauto could not transliterate the path, as the Transliteration module has been disabled.'), 'error');
-    }
+
+    $output = strtr($output, $translations);
   }
 
-  // Reduce strings to letters and numbers
+  // Reduce to the subset of ASCII96 letters and numbers
   if (variable_get('pathauto_reduce_ascii', FALSE)) {
     $pattern = '/[^a-zA-Z0-9\/]+/ ';
     $output = preg_replace($pattern, $separator, $output);
   }
 
   // Get rid of words that are on the ignore list
-  $ignore_re = '\b' . preg_replace('/,/', '\b|\b', variable_get('pathauto_ignore_words', $ignore_words)) . '\b';
+  $ignore_re = '\b'. preg_replace('/,/', '\b|\b', variable_get('pathauto_ignore_words', $ignore_words)) .'\b';
 
   if (function_exists('mb_eregi_replace')) {
     $output = mb_eregi_replace($ignore_re, '', $output);
@@ -194,8 +150,8 @@ function pathauto_cleanstring($string, $clean_slash = TRUE) {
   $output = _pathauto_clean_separators($output, $separator);
 
   // Enforce the maximum component length
-  $maxlength = min(variable_get('pathauto_max_component_length', 100), _pathauto_get_schema_alias_maxlength());
-  $output = _pathauto_truncate_chars($output, $maxlength, $separator);
+  $maxlength = min(variable_get('pathauto_max_component_length', 100), 128);
+  $output = drupal_substr($output, 0, $maxlength);
 
   return $output;
 }
@@ -234,7 +190,7 @@ function _pathauto_clean_separators($string, $separator = NULL) {
   }
 
   // Optionally convert to lower case.
-  if (variable_get('pathauto_case', PATHAUTO_CASE_LOWER)) {
+  if (variable_get('pathauto_case', 1)) {
     $output = drupal_strtolower($output);
   }
 
@@ -279,7 +235,7 @@ function pathauto_clean_alias($alias) {
  *   An array whose keys consist of the translated placeholders
  *   which appear in patterns (e.g., t('[title]')) and values are the
  *   actual values to be substituted into the pattern (e.g., $node->title).
- * @param $source
+ * @param $src
  *   The "real" URI of the content to be aliased (e.g., "node/$node->nid").
  * @param $entity_id
  *   The entity ID (node ID, user ID, etc.).
@@ -292,7 +248,7 @@ function pathauto_clean_alias($alias) {
  * @return
  *   The alias that was created.
  */
-function pathauto_create_alias($module, $op, $placeholders, $source, $entity_id, $type = NULL, $language = '') {
+function pathauto_create_alias($module, $op, $placeholders, $src, $entity_id, $type = NULL, $language = '') {
   if (($op != 'bulkupdate') and variable_get('pathauto_verbose', FALSE) && user_access('notify of path changes')) {
     $verbose = TRUE;
   }
@@ -300,22 +256,30 @@ function pathauto_create_alias($module, $op, $placeholders, $source, $entity_id,
     $verbose = FALSE;
   }
 
-  // Retrieve and apply the pattern for this content type.
-  $pattern = pathauto_pattern_load_by_entity($module, $type, $language);
+  // Retrieve and apply the pattern for this content type
+  if (!empty($type)) {
+    $pattern = trim(variable_get('pathauto_'. $module .'_'. $type .'_'. $language .'_pattern', ''));
+    if (empty($pattern)) {
+      $pattern = trim(variable_get('pathauto_'. $module .'_'. $type .'_pattern', ''));
+    }
+  }
   if (empty($pattern)) {
-    // No pattern? Do nothing (otherwise we may blow away existing aliases...)
+    $pattern = trim(variable_get('pathauto_'. $module .'_pattern', ''));
+  }
+  // No pattern? Do nothing (otherwise we may blow away existing aliases...)
+  if (empty($pattern)) {
     return '';
   }
 
   if ($module == 'taxonomy') {
     // Get proper path for term.
     $term_path = taxonomy_term_path(taxonomy_get_term($entity_id));
-    if ($term_path != $source) {
+    if ($term_path != $src) {
       // Quietly alias 'taxonomy/term/[tid]' with proper path for term.
-      $update_data = _pathauto_existing_alias_data($source);
-      _pathauto_set_alias($source, $term_path, $module, $entity_id, $update_data['pid'], FALSE, $update_data['old_alias'], $language);
-      // Set $source as proper path.
-      $source = $term_path;
+      $update_data = _pathauto_existing_alias_data($src);
+      _pathauto_set_alias($src, $term_path, $module, $entity_id, $update_data['pid'], FALSE, $update_data['old_alias'], $language);
+      // Set $src as proper path.
+      $src = $term_path;
     }
   }
 
@@ -323,11 +287,11 @@ function pathauto_create_alias($module, $op, $placeholders, $source, $entity_id,
   $pid = NULL;
   $old_alias = NULL;
   if ($op == 'update' or $op == 'bulkupdate') {
-    if (variable_get('pathauto_update_action', PATHAUTO_UPDATE_ACTION_DELETE) == PATHAUTO_UPDATE_ACTION_NO_NEW) {
+    if (variable_get('pathauto_update_action', 2) == 0) {
       // Do nothing
       return '';
     }
-    $update_data = _pathauto_existing_alias_data($source);
+    $update_data = _pathauto_existing_alias_data($src);
     $pid = $update_data['pid'];
     $old_alias = $update_data['old_alias'];
   }
@@ -344,17 +308,15 @@ function pathauto_create_alias($module, $op, $placeholders, $source, $entity_id,
   // Clean the alias.
   $alias = pathauto_clean_alias($alias);
 
-  // Shorten to a logical place based on the last separator.
-  $separator = variable_get('pathauto_separator', '-');
+  // Enforce the maximum length.
   $maxlength = min(variable_get('pathauto_max_length', 100), _pathauto_get_schema_alias_maxlength());
-
-  // Make sure we're not ending the alias in the middle of a word.
-  $alias = _pathauto_truncate_chars($alias, $maxlength, $separator);
+  $alias = drupal_substr($alias, 0, $maxlength);
 
   // If the alias already exists, generate a new, hopefully unique, variant
-  if (_pathauto_alias_exists($alias, $source, $language)) {
+  $separator = variable_get('pathauto_separator', '-');
+  if (_pathauto_alias_exists($alias, $src, $language)) {
     $original_alias = $alias;
-    for ($i = 0; _pathauto_alias_exists(drupal_substr($alias, 0, $maxlength - strlen($i)) . $separator . $i, $source, $language); $i++) {
+    for ($i = 0; _pathauto_alias_exists(drupal_substr($alias, 0, $maxlength - strlen($i)) . $separator . $i, $src, $language); $i++) {
     }
     // Make room for the sequence number
     $alias = drupal_substr($alias, 0, $maxlength - drupal_strlen($i));
@@ -372,22 +334,22 @@ function pathauto_create_alias($module, $op, $placeholders, $source, $entity_id,
   }
 
   // If $pid is NULL, a new alias is created - otherwise, the existing
-  // alias for the designated source is replaced.
-  _pathauto_set_alias($source, $alias, $module, $entity_id, $pid, $verbose, $old_alias, $language);
+  // alias for the designated src is replaced
+  _pathauto_set_alias($src, $alias, $module, $entity_id, $pid, $verbose, $old_alias, $language);
 
   // Also create a related feed alias if requested, and if supported
   // by the module
-  if (drupal_strlen(variable_get('pathauto_' . $module . '_applytofeeds', ''))) {
-    $feedappend = variable_get('pathauto_' . $module . '_applytofeeds', '');
+  if (drupal_strlen(variable_get('pathauto_'. $module .'_applytofeeds', ''))) {
+    $feedappend = variable_get('pathauto_'. $module .'_applytofeeds', '');
 
-    // For forums and taxonomies, the source doesn't always form the base of the rss feed (ie. image galleries)
+    // For forums and taxonomies, the src doesn't always form the base of the rss feed (ie. image galleries)
     if ($module == 'taxonomy' || $module == 'forum') {
       $update_data = _pathauto_existing_alias_data("taxonomy/term/$entity_id/$feedappend");
       _pathauto_set_alias("taxonomy/term/$entity_id/$feedappend", "$alias/feed", $module, $entity_id, $update_data['pid'], $verbose, $update_data['old_alias'], $language);
     }
     else {
-      $update_data = _pathauto_existing_alias_data("$source/$feedappend");
-      _pathauto_set_alias("$source/$feedappend", "$alias/feed", $module, $entity_id, $update_data['pid'], $verbose, $update_data['old_alias'], $language);
+      $update_data = _pathauto_existing_alias_data("$src/$feedappend");
+      _pathauto_set_alias("$src/$feedappend", "$alias/feed", $module, $entity_id, $update_data['pid'], $verbose, $update_data['old_alias'], $language);
     }
   }
 
@@ -415,9 +377,9 @@ function _pathauto_path_is_callback($path) {
 /**
  * Private function for Pathauto to create an alias.
  *
- * @param $source
+ * @param $src
  *   The internal path.
- * @param $alias
+ * @param $dst
  *   The visible externally used path.
  * @param $entity_type
  *   The entity type (node, user, etc.).
@@ -432,46 +394,44 @@ function _pathauto_path_is_callback($path) {
  * @param $language
  *   The path's language.
  */
-function _pathauto_set_alias($source, $alias, $entity_type, $entity_id, $pid = NULL, $verbose = FALSE, $old_alias = NULL, $language = '') {
+function _pathauto_set_alias($src, $dst, $entity_type, $entity_id, $pid = NULL, $verbose = FALSE, $old_alias = NULL, $language = '') {
   // Alert users that an existing callback cannot be overridden automatically
-  if (_pathauto_path_is_callback($alias)) {
+  if (_pathauto_path_is_callback($dst)) {
     if ($verbose && user_access('notify of path changes')) {
-      drupal_set_message(t('Ignoring alias %alias due to existing path conflict.', array('%alias' => $alias)));
+      drupal_set_message(t('Ignoring alias %dst due to existing path conflict.', array('%dst' => $dst)));
     }
     return;
   }
   // Alert users if they are trying to create an alias that is the same as the internal path
-  if ($source == $alias) {
+  if ($src == $dst) {
     if ($verbose && user_access('notify of path changes')) {
-      drupal_set_message(t('Ignoring alias %alias because it is the same as the internal path.', array('%alias' => $alias)));
+      drupal_set_message(t('Ignoring alias %dst because it is the same as the internal path.', array('%dst' => $dst)));
     }
     return;
   }
 
   // Skip replacing the current alias with an identical alias
-  if ($old_alias != $alias) {
-    path_set_alias($source, $alias, $pid, $language);
+  if ($old_alias != $dst) {
+    path_set_alias($src, $dst, $pid, $language);
 
-    if (variable_get('pathauto_update_action', PATHAUTO_UPDATE_ACTION_DELETE) == PATHAUTO_UPDATE_ACTION_REDIRECT
-        && module_exists('path_redirect')
-        && function_exists('path_redirect_save')) {
+    if (variable_get('pathauto_update_action', 2) == 3 && function_exists('path_redirect_save')) {
       if (!empty($old_alias)) {
         $redirect = array(
           'source' => $old_alias,
-          'redirect' => $source,
+          'redirect' => $src,
         );
         path_redirect_save($redirect);
       }
     }
     if ($verbose && user_access('notify of path changes')) {
       if (!empty($redirect)) {
-        drupal_set_message(t('Created new alias %alias for %source, replacing %old_alias. %old_alias now redirects to %alias.', array('%alias' => $alias, '%source' => $source, '%old_alias' => $old_alias)));
+        drupal_set_message(t('Created new alias %dst for %src, replacing %old_alias. %old_alias now redirects to %dst', array('%dst' => $dst, '%src' => $src, '%old_alias' => $old_alias)));
       }
       elseif ($pid) {
-        drupal_set_message(t('Created new alias %alias for %source, replacing %old_alias.', array('%alias' => $alias, '%source' => $source, '%old_alias' => $old_alias)));
+        drupal_set_message(t('Created new alias %dst for %src, replacing %old_alias', array('%dst' => $dst, '%src' => $src, '%old_alias' => $old_alias)));
       }
       else {
-        drupal_set_message(t('Created new alias %alias for %source.', array('%alias' => $alias, '%source' => $source)));
+        drupal_set_message(t('Created new alias %dst for %src', array('%dst' => $dst, '%src' => $src)));
       }
     }
   }
@@ -487,10 +447,15 @@ function _pathauto_set_alias($source, $alias, $entity_type, $entity_id, $pid = N
  *   Pathauto expects to see them.
  */
 function pathauto_get_placeholders($type, $object) {
-  $full = token_get_values($type, $object, TRUE);
-  $tokens = token_prepare_tokens($full->tokens);
-  $values = pathauto_clean_token_values($full);
-  return array('tokens' => $tokens, 'values' => $values);
+  if (function_exists('token_get_values')) {
+    $full = token_get_values($type, $object, TRUE);
+    $tokens = token_prepare_tokens($full->tokens);
+    $values = pathauto_clean_token_values($full);
+    return array('tokens' => $tokens, 'values' => $values);
+  }
+  // TODO at some point try removing this and see if install profiles have problems again.
+  watchdog('Pathauto', 'It appears that you have installed Pathauto, which depends on token, but token is either not installed or not installed properly.');
+  return array('tokens' => array(), 'values' => array());
 }
 
 /**
@@ -555,39 +520,13 @@ function pathauto_punctuation_chars() {
   $punctuation['exclamation']        = array('value' => '!', 'name' => t('Exclamation !'));
   $punctuation['tilde']              = array('value' => '~', 'name' => t('Tilde ~'));
   $punctuation['left_parenthesis']   = array('value' => '(', 'name' => t('Left parenthesis ('));
-  $punctuation['right_parenthesis']  = array('value' => ')', 'name' => t('Right parenthesis )'));
+  $punctuation['right_parenthesis']  = array('value' => ')', 'name' => t('right parenthesis )'));
   $punctuation['question_mark']      = array('value' => '?', 'name' => t('Question mark ?'));
   $punctuation['less_than']          = array('value' => '<', 'name' => t('Less than <'));
   $punctuation['greater_than']       = array('value' => '>', 'name' => t('Greater than >'));
   $punctuation['back_slash']         = array('value' => '\\', 'name' => t('Back slash \\'));
 
   return $punctuation;
-}
-
-/**
- * A Pathauto friendly version of truncate_utf8.
- *
- * @param $string
- *   The string to be truncated.
- * @param $length
- *   An integer for the maximum desired length.
- * @param $separator
- *   A string which contains the word boundary such as - or _.
- *
- * @return
- *  The string truncated below the maxlength.
- */
-function _pathauto_truncate_chars($string, $length, $separator) {
-  if (drupal_strlen($string) > $length) {
-    $string = drupal_substr($string, 0, $length + 1); // leave one more character
-    if ($last_break = strrpos($string, $separator)) { // space exists AND is not on position 0
-      $string = drupal_substr($string, 0, $last_break);
-    }
-    else {
-      $string = drupal_substr($string, 0, $length);
-    }
-  }
-  return $string;
 }
 
 /**

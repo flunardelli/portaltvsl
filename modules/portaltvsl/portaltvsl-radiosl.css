@@ -6,12 +6,12 @@ body, html {
 
 #radio-player #displayArtist {
     color: #fff;
-    font-size: 12px;
+    font-size: 10px;
     width:120px;
     text-align:center;
 	line-height: 25px;
 	float: right;
-	margin-left:-20px;
+	margin-left:5px;
 	position: absolute;
 }
 

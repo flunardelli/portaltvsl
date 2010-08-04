@@ -187,9 +187,7 @@ function theme_portaltvsl_player_embed_toolbar($element,$node) {
 }
 
 function theme_portaltvsl_player($element) {
-  $output = '<video width="'.$element->width.'" height="'.$element->height.'" '.(($element->autoplay == 'true') ? 'autoplay' : '').' '.(($element->autobuffer == 'true') ? 'autobuffer' : '').' '.(($element->showcontrols == 'true') ? 'controls' : '') .' src="'.$element->mediafile.'" 
-  poster="'.$element->poster.'" durationHint="'.$element->duration.'">
-	<object id="portaltvsl-audio-player'.(($element->playerid) ? $element->playerid : '').'" width="'.$element->width.'" height="'.$element->height.'" codebase="http://java.sun.com/products/plugin/autodl/jinstall-1_4_2-windows-i586.cab#Version=1,4,2,0" classid="clsid:CAFEEFAC-0014-0002-0000-ABCDEFFEDCBA">
+  $java_player = '<object id="portaltvsl-audio-player'.(($element->playerid) ? $element->playerid : '').'" width="'.$element->width.'" height="'.$element->height.'" codebase="http://java.sun.com/products/plugin/autodl/jinstall-1_4_2-windows-i586.cab#Version=1,4,2,0" classid="clsid:CAFEEFAC-0014-0002-0000-ABCDEFFEDCBA">
 	  <param value="com.fluendo.player.Cortado.class" name="code"/>
 	  <param value="'.PORTALTVSL_CORTADO_PATH.'" name="codebase"/>
 	  <param value="'.PORTALTVSL_CORTADO_PATH.'" name="archive"/>
@@ -211,9 +209,13 @@ function theme_portaltvsl_player($element) {
 		  <param name="statusHeight" value="(($element->statusheight) ? $element->statusheight : 30)">
 	    </applet>
 	  </comment>  
-	</object>	
-  </video>';
+	</object>';
+	
+  $output = '<video width="'.$element->width.'" height="'.$element->height.'" '.(($element->autoplay == 'true') ? 'autoplay' : '').' '.(($element->autobuffer == 'true') ? 'autobuffer' : '').' '.(($element->showcontrols == 'true') ? 'controls' : '') .' src="'.$element->mediafile.'" 
+  poster="'.$element->poster.'" durationHint="'.$element->duration.'">'.$java_player.'</video>';
+	
   return $output;
+  //return $java_player;
 }
 
 function theme_portaltvsl_radiosl_block($id) {
@@ -281,7 +283,7 @@ function theme_portaltvsl_radiosl_embed($id) {
   strokeWidth: 1
   });';
 
-  $help_content = '<div id="help-content" style="color: #000;font-size: 11px; font-family:Verdana,Tahoma,"DejaVu Sans",sans-serif;z-index: 999"><div style="float:left;">Compat&iacute;vel com Firefox 3.5+., Chrome 4.x+ e Opera 10.x+ usando HTML5 ou Internet Explorer utilizando plugin Java. <a href="'.$base_url .'/como-acessar" target="_new" style="color: #000;">Saiba Mais</a></div></div>';
+  $help_content = '<div id="help-content" style="color: #000;font-size: 11px; font-family:Verdana,Tahoma,"DejaVu Sans",sans-serif;z-index: 999"><div style="float:left;">Compat&iacute;vel com Firefox 3.5+., Chrome 4.x+ e Opera 10.x+ usando HTML5 ou Internet Explorer utilizando plugin Flash 10.x. <a href="'.$base_url .'/como-acessar" target="_new" style="color: #000;">Saiba Mais</a></div></div>';
   $helpPopup = '$(\'a#help\').bt(\''.$help_content.'\', 
   {
   positions: \'bottom\',
@@ -310,7 +312,7 @@ $output = '
     var jBasePath = "'.$base.'/";
 	var jBasePathLink = "'.$base_url .'/embed/radiosl/1";
     var jUrlStream = "'.$stream.'";	
-	var backend = "java";
+	var backend = "flash";
 	var audioElementId = "'.$player_id.'";
 </script>
 <script type="text/javascript" src="'.$base.'/portaltvsl-radiosl.js"></script>
@@ -321,6 +323,7 @@ $output = '
 <script type="text/javascript" src="'.$base.'/popup/jquery.bt.min.js"></script>
 <script type="text/javascript" src="'.$base.'/popup/libs/jquery.easing.1.3.js"></script>
 <script type="text/javascript">'.$r.'</script>
+
 <link type="text/css" rel="stylesheet" media="all" href="'.$base.'/portaltvsl-radiosl.css" />
 </head>
 <body>
@@ -334,6 +337,7 @@ $output = '
 <a href="javascript:void(0)" onclick="javascript:goPopUp();" title="detach"><img src="'.$base.'/images/popup.png" border="0" alt="detach" style="margin-top: -5px;"></a>
 </span>
 <span id="player-main">
+<!--
 <object id="'.$player_id.'IE" width="0" height="0" codebase="http://java.sun.com/products/plugin/autodl/jinstall-1_4_2-windows-i586.cab#Version=1,4,2,0" classid="clsid:CAFEEFAC-0014-0002-0000-ABCDEFFEDCBA">
   <param value="com.fluendo.player.Cortado.class" name="code"/>
   <param value="'.PORTALTVSL_CORTADO_PATH.'" name="codebase"/>
@@ -359,6 +363,18 @@ $output = '
 	</applet>
   </comment>  
 </object>
+-->
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="0" height="0" id="'.$player_id.'Flash" align="middle" >
+  <param name="movie" value="'.$base.'/AnOgg.swf"/>
+  <param name="allowScriptAccess" value="always" />
+  <param name="wmmode" value="opaque" />
+  <param name="quality" value="high" />
+  <param name="scale" value="noscale" />
+  <param name="salign" value="lt" />
+  <param name="bgcolor" value="#ffffff"/>
+	<embed src="'.$base.'/AnOgg.swf" bgcolor="#ffffff" width="0" height="0" name="'.$player_id.'Flash" wmmode="opaque" quality="high" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"pluginspage="http://www.macromedia.com/go/getflashplayer"/>
+</object>
+
 <audio id="'.$player_id.'H5" style="display: none;" src="'.$stream.'">
 </audio>
 </span>

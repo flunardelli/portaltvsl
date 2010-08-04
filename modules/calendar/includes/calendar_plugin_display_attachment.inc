@@ -159,6 +159,7 @@ class calendar_plugin_display_attachment extends views_plugin_display_attachment
   /**
    * Set default values for the display.
    */
+/*
   function options(&$display) {
     parent::options($display);
     $display->display_options['inherit_argments'] = TRUE;
@@ -166,6 +167,23 @@ class calendar_plugin_display_attachment extends views_plugin_display_attachment
     $display->display_options['attachment_position'] = 'after';
     $display->display_options['calendar_type'] = $this->calendar_type();
   }  
+*/
+function options($display) {
+    parent::options($display);
+    if ( is_object($display) ) {
+   	$display->display_options['inherit_argments'] = TRUE;
+    	$display->display_options['inherit_filters'] = TRUE;
+    	$display->display_options['attachment_position'] = 'after';
+    	$display->display_options['calendar_type'] = $this->calendar_type();
+    } else {
+    
+	$display['display_options']['inherit_argments'] = TRUE;
+    	$display['display_options']['inherit_filters'] = TRUE;
+    	$display['display_options']['attachment_position'] = 'after';
+    	$display['display_options']['calendar_type'] = $this->calendar_type();
+
+    }
+  }
 
   /**
    * Add custom option definitions.

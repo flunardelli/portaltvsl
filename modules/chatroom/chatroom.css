@@ -1,4 +1,4 @@
-/* $Id: chatroom.css,v 1.22.4.2 2009/10/29 20:43:01 justinrandell Exp $ */
+/* $Id: chatroom.css,v 1.22.4.3 2010/04/10 23:50:58 justinrandell Exp $ */
 #chatroom table {
   width: 100%;
 }
@@ -62,7 +62,6 @@
 #chatroom-board p,
 #chatroom-container-archive p {
   margin:0;
-  width: 70em;
 }
 .chatroom-textentry-options table {
   border-collapse: separate;

@@ -121,8 +121,10 @@ function special_menu_itemsoverwrite_menu_item_link($link) {
     //Return separator menu item
     return render_menu_item($tag,$value,$css);
   }
-  else
-     return call_user_func($theme_overwrite, $link);
+  else {
+	if (function_exists($theme_overwrite))
+	  return call_user_func($theme_overwrite, $link);
+  }
 }
 
 /**
