@@ -1,10 +1,34 @@
 <?php
-// $Id: views_slideshow_singleframe.module,v 1.1.2.1.2.5 2010/02/23 22:21:44 psynaptic Exp $
+// $Id: views_slideshow_singleframe.module,v 1.1.2.1.2.7 2010/05/18 05:16:07 redndahead Exp $
 
 /**
  * @file
  * Views Slideshow: SingleFrame is typically used for field views.
  */
+
+/**
+ * Implements hook_init().
+ */
+function views_slideshow_singleframe_init() {
+  // If the jQ module is installed, use that to add the jQuery Cycle plugin.
+  // This allows different versions of the plugin to be used.
+  $js = FALSE;
+  if (module_exists('jq')) {
+    $loaded_plugins = jq_plugins();
+    if (!empty($loaded_plugins['cycle'])) {
+      $js = jq_add('cycle');
+    }
+  }
+
+  // Otherwise, we'll add the version included with this module.
+  if (!$js) {
+    drupal_add_js(drupal_get_path('module', 'views_slideshow') . '/js/jquery.cycle.all.min.js');
+  }
+
+  $module_path = drupal_get_path('module', 'views_slideshow_singleframe');
+  drupal_add_js($module_path . '/views_slideshow.js', 'module');
+  drupal_add_css($module_path . '/views_slideshow.css', 'module');
+}
 
 /**
  * Implements hook_theme().
@@ -17,35 +41,35 @@ function views_slideshow_singleframe_theme($existing, $type, $theme, $path) {
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_controls' =>array(
-      'arguments' => array('id' => '', 'view' => NULL, 'options' => array()),
+      'arguments' => array('vss_id' => '', 'view' => NULL, 'options' => array()),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_control_previous' =>array(
-      'arguments' => array('id' => '', 'view' => NULL, 'options' => array()),
+      'arguments' => array('vss_id' => '', 'view' => NULL, 'options' => array()),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_control_pause' =>array(
-      'arguments' => array('id' => '', 'view' => NULL, 'options' => array()),
+      'arguments' => array('vss_id' => '', 'view' => NULL, 'options' => array()),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_control_next' =>array(
-      'arguments' => array('id' => '', 'view' => NULL, 'options' => array()),
+      'arguments' => array('vss_id' => '', 'view' => NULL, 'options' => array()),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_pager' => array(
-      'arguments' => array('id' => '', 'view' => NULL, 'options' => array()),
+      'arguments' => array('vss_id' => '', 'view' => NULL, 'options' => array()),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_image_count' => array(
-      'arguments' => array('id' => '', 'view' => NULL, 'options' => array()),
+      'arguments' => array('vss_id' => '', 'view' => NULL, 'options' => array()),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
     'views_slideshow_singleframe_no_display_section' => array(
-      'arguments' => array('view' => NULL, 'rows' => NULL, 'id' => NULL, 'mode' => NULL, 'teaser' => TRUE),
+      'arguments' => array('view' => NULL, 'rows' => NULL, 'vss_id' => NULL, 'mode' => NULL, 'teaser' => TRUE),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),    
     'views_slideshow_singleframe_no_display_teaser' => array(
-      'arguments' => array('item' => NULL, 'id' => NULL, 'count' => NULL),
+      'arguments' => array('item' => NULL, 'vss_id' => NULL, 'count' => NULL),
       'file' => 'views_slideshow_singleframe.theme.inc',
     ),
   );

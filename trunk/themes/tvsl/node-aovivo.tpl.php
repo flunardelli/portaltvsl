@@ -123,6 +123,13 @@ $snapshot = $base_url . '/themes/tvsl/images/tvsl-banner-logo.png';
   $element->height = $height;
   $element->poster = $snapshot;
   $element->mediafile = $node->field_urlstream[0]['value'];
+
+  //$baseu = 'http://149.142.5.72/iceredir/'; 
+  //$b = basename($node->field_urlstream[0]['value']); 
+  //$element->mediafile = $baseu . $b; 
+  $node->field_urlstream[0]["value"] = $element->mediafile;
+
+
   $element->duration = $node->playtime_seconds;
   $element->showcontrols = true;
   $element->autoplay = true;

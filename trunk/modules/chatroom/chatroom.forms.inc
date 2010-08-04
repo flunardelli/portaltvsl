@@ -1,5 +1,5 @@
 <?php
-// $Id: chatroom.forms.inc,v 1.2.2.29 2009/11/30 21:42:32 justinrandell Exp $
+// $Id: chatroom.forms.inc,v 1.2.2.34 2010/07/09 07:15:16 justinrandell Exp $
 
 /**
  * @file
@@ -91,14 +91,14 @@ function chatroom_form(&$node, $form_state) {
   $form['chat_settings']['poll_freq'] = array(
     '#type' => 'select',
     '#title' => t('Update frequency'),
-    '#default_value' => empty($node->chatroom->poll_freq) ? 1 : $node->chatroom->poll_freq / 1000,
+    '#default_value' => empty($node->chatroom->poll_freq) ? 1 : $node->chatroom->poll_freq,
     '#options' => drupal_map_assoc(range(1, 10)),
     '#description' => t('How many seconds between each request for updates from the server.'),
   );
   $form['chat_settings']['idle_freq'] = array(
     '#type' => 'select',
     '#title' => t('Idle time'),
-    '#default_value' => empty($node->chatroom->idle_freq) ? 60 : $node->chatroom->idle_freq / 1000,
+    '#default_value' => empty($node->chatroom->idle_freq) ? 60 : $node->chatroom->idle_freq,
     '#options' => drupal_map_assoc(array(20, 40, 60, 80, 100, 120, 140, 160, 180)),
     '#description' => t('How many seconds between each message before a last message time is shown in the chat.'),
   );
@@ -166,6 +166,13 @@ function chatroom_admin_settings() {
     '#default_value' => variable_get('chatroom_block_update_interval', 5),
     '#description' => t('Determines how often blocks should update active chat rooms, active chats, and on-line users.'),
     '#size' => 2,
+  );
+  $form['chatroom_online_list_timeout'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Chat room user online timeout length'),
+    '#default_value' => variable_get('chatroom_online_list_timeout', 10),
+    '#description' => t('In seconds, sets length of time since use was last seen in chat before being removed from chat user list'),
+    '#size' => 3,
   );
   $form['chatroom_guest_user_prefix'] = array(
     '#type' => 'textfield',
@@ -253,6 +260,10 @@ function chatroom_admin_settings_validate($form, &$form_state) {
   else {
     form_set_error('chatroom_block_update_interval', t('The block update interval must be a number.'));
   }
+  $timeout = $form_state['values']['chatroom_online_list_timeout'];
+  if (!is_numeric($timeout) || $timeout < 10 || $timeout > 999) {
+    form_set_error('chatroom_online_list_timeout', t('The online timeout length must be a a valid number from 10 to 999.'));
+  }
 }
 
 /**
@@ -260,6 +271,9 @@ function chatroom_admin_settings_validate($form, &$form_state) {
  */
 function chatroom_chat_form(&$node, $form_state) {
   global $user;
+
+  // Load type definition.
+  $type = node_get_types('type', $node->type);
 
   $form['title'] = array(
     '#type' => 'textfield',
@@ -270,15 +284,18 @@ function chatroom_chat_form(&$node, $form_state) {
   );
   $form['chatroom_nid'] = array(
     '#type' => 'hidden',
-    '#value' => $node->chat->chatroom ? $node->chat->chatroom->nid : 0,
+    '#value' => '',
+    '#value' => isset($node->chat) && $node->chat->chatroom ? $node->chat->chatroom->nid : 0,
   );
-  $form['body_filter']['body'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Description'),
-    '#default_value' => $node->body,
-    '#rows' => 3,
-    '#description' => t('Describe your chat so other people will know if they want to join.'),
-  );
+  if ($type->has_body) {
+    $form['body_filter']['body'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Description'),
+      '#default_value' => $node->body,
+      '#rows' => 3,
+      '#description' => t('Describe your chat so other people will know if they want to join.'),
+    );
+  }
   $form['body_filter']['format'] = filter_form($node->format);
   $form['kicked_out_message'] = array(
     '#type' => 'textarea',
@@ -317,7 +334,7 @@ function chatroom_chat_form(&$node, $form_state) {
   $form['chat_settings']['poll_freq'] = array(
     '#type' => 'select',
     '#title' => t('Update frequency'),
-    '#default_value' => isset($node->chat) ? $node->chat->poll_freq / 1000 : 1,
+    '#default_value' => isset($node->chat) ? $node->chat->poll_freq : 1,
     '#options' => drupal_map_assoc(range(1, 10)),
     '#description' => t('How many seconds between each request for updates from the server.'),
   );
@@ -330,7 +347,7 @@ function chatroom_chat_form(&$node, $form_state) {
   $form['chat_settings']['idle_freq'] = array(
     '#type' => 'select',
     '#title' => t('Idle time'),
-    '#default_value' => isset($node->chat) ? $node->chat->idle_freq / 1000 : 60,
+    '#default_value' => isset($node->chat) ? $node->chat->idle_freq : 60,
     '#options' => drupal_map_assoc(array(20, 40, 60, 80, 100, 120, 140, 160, 180)),
     '#description' => t('How many seconds between each message before a last message time is shown in the chat.'),
   );

@@ -104,7 +104,7 @@ function admin_menu_link_save($item) {
  *   Array of links under admin/* that were removed by admin_menu_adjust_items().
  *   If one of these links is added back, it should be removed from the array.
  */
-function admin_menu_admin_menu(&$deleted) {
+function admin_menu_admin_menu($deleted) {
   $links = array();
   $icon_path = '<front>';
 

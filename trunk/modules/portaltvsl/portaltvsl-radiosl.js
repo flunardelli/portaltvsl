@@ -2,18 +2,56 @@ var vVolume=100;
 var oggStatus="loaded";
 var isIE  = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
 var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
-var isFirefox = (navigator.userAgent.indexOf('Firefox') !=-1) ? true : false;
+var isFirefox = (navigator.userAgent.indexOf('Mozilla') !=-1) ? true : false;
 var isChrome = (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) ? true : false;
 var audioElement = null;
+var radioslRefresh;
+function getFlashMovie(movieName) {
+  isIE = navigator.appName.indexOf("Microsoft") != -1;
+  return (isIE) ? window[movieName] : document[movieName];
+}
+
+function radioStatusUpdate() {
+	if (radioslRefresh) {
+	  js_log('refresh');
+	  clearInterval(radioslRefresh);
+	  radioslRefresh = null;
+	  $('#displayArtist').html('');
+	} else {
+	radioslRefresh = window.setInterval(
+	function() {  
+  	  $.ajax({
+		  url: jBasePath + 'portaltvsl-status-proxy.php',
+		  dataType: 'xml',
+		  success: function(data) {
+			$(data).find("source").each(function(){  			
+		  	  var mount =  $(this).find("mount").text();  
+		      var artist =  $(this).find("artist").text();  
+		      var title =  $(this).find("title").text();  
+			  if (mount == '/radiosl.ogg' && (artist || title)){
+				  $('#displayArtist').html(artist);
+				  $('#displayTitle').html(title);
+			  }
+			});   
+		  }
+		});
+	}, 10000);
+  }
+}
+
 function doPlayStop()
 {
+	//backend = "java";
+	
+	  //window.console.log("%d ways to skin a cat.", 101);
+
 	if (isFirefox){
 	  backend = "html5";
 	}
 
 	if (isChrome){
-	  backend = "java";
-	  isIE = true;
+	  backend = "flash";
+	  //isIE = true;
 	}
 
 	js_log("use " + backend + ' - ' +jBasePath);
@@ -24,7 +62,7 @@ function doPlayStop()
 		else
 		  audioElement = document.getElementById(audioElementId);
 		
-		//js_log(audioElement);
+		js_log(audioElement);
 		
 		js_log("use cortado " + backend + audioElementId + oggStatus );
 	    if (oggStatus=="stopped" || (oggStatus=="loaded") ) {
@@ -53,8 +91,23 @@ function doPlayStop()
 	  	  oggStatus="stopped"; 
 		  onOggState(oggStatus);
 	    }
+	} else if (backend == 'flash') {  
+		audioElement = document.getElementById(audioElementId + 'Flash');	
+		js_log("use flash " + backend + audioElementId + oggStatus + ' ' + audioElement.src);
+	    if (oggStatus=="stopped" || (oggStatus=="loaded") ) {
+		  document.getElementById('playerbutton').src = jBasePath + 'images/b-stop.png';
+		  audioElement.playURL(jUrlStream);
+		  oggStatus="playing";
+		  onOggState(oggStatus);
+		} else {
+		  document.getElementById('playerbutton').src = jBasePath + 'images/b-play.png';
+		  audioElement.stopPlay();
+		  //audioElement.currentTime = 0;
+	  	  oggStatus="stopped"; 
+		  onOggState(oggStatus);
+	    }
 	}
-	
+	radioStatusUpdate();
 }
 
 function onOggState(str)

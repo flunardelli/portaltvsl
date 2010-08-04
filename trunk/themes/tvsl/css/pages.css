@@ -913,7 +913,8 @@ td.active {
 
 .view-view-aovivolist .view-content  {
     margin-top:20px;
-	background: url("../images/calendar-icon.png") no-repeat right 40px;
+    background: url("../images/calendar-icon.png") no-repeat right 40px;
+    min-height:300px;
 }
 
 .view-view-aovivolist .view-content table {

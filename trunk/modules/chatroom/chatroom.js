@@ -1,4 +1,4 @@
-// $Id: chatroom.js,v 1.50.4.28 2009/12/02 15:27:00 justinrandell Exp $
+// $Id: chatroom.js,v 1.50.4.31 2010/07/08 03:35:41 justinrandell Exp $
 
 Drupal.chatroom = Drupal.chatroom || {};
 
@@ -43,7 +43,7 @@ Drupal.behaviors.chatroom = function(context) {
   });
 
   $('#edit-chatroom-message-entry-box').keyup(function(e) { 
-    var messageText = $('#edit-chatroom-message-entry-box').val();
+    var messageText = $('#edit-chatroom-message-entry-box').val().replace(/^\s+|\s+$/g, '');
     if (messageText && e.keyCode == 13 && !e.shiftKey && !e.ctrlKey) {
       Drupal.chatroom.postMessage(messageText);
       $('#edit-chatroom-message-entry-box').val('').focus();
@@ -55,7 +55,7 @@ Drupal.behaviors.chatroom = function(context) {
   $('#edit-chatroom-message-entry-submit').click(function (e) {
     e.preventDefault();
     e.stopPropagation();
-    var messageText = $('#edit-chatroom-message-entry-box').val();
+    var messageText = $('#edit-chatroom-message-entry-box').val().replace(/^\s+|\s+$/g, '');
     if (messageText) {
       Drupal.chatroom.postMessage(messageText);
       $('#edit-chatroom-message-entry-box').val('').focus();
@@ -72,6 +72,12 @@ Drupal.behaviors.chatroom = function(context) {
     e.preventDefault();
     e.stopPropagation();
     Drupal.chatroom.banUser(e.target.parentNode.id);
+  });
+
+  $('.chatroom-remove-user-link').click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Drupal.chatroom.removeUser(e.target.parentNode.id);
   });
 }
 
@@ -91,6 +97,19 @@ Drupal.chatroom.kickUser = function(uid) {
   $.ajax({
     type: 'POST',
     url: Drupal.settings.basePath + Drupal.settings.chatroom.kickUserPath + '/' + Drupal.settings.chatroom.chatId,
+    dataType: 'json',
+    success: Drupal.chatroom.pollHandler,
+    data: { 
+      uid: uid,
+      is_popout: Drupal.settings.chatroom.isPopout
+    }
+  });
+}
+
+Drupal.chatroom.removeUser = function(uid) {
+  $.ajax({
+    type: 'POST',
+    url: Drupal.settings.basePath + Drupal.settings.chatroom.removeUserPath + '/' + Drupal.settings.chatroom.chatId,
     dataType: 'json',
     success: Drupal.chatroom.pollHandler,
     data: { 
@@ -121,7 +140,7 @@ Drupal.chatroom.poll = function() {
     } 
   });
 }
- 
+
 Drupal.chatroom.pollHandler = function(response, responseStatus) {
   // If the user was kicked or banned, get them out of here.
   if (response.data.accessDenied) {
@@ -144,23 +163,28 @@ Drupal.chatroom.pollHandler = function(response, responseStatus) {
     Drupal.settings.chatroom.successiveCacheHits = 0;
   }
 
-  var newMessage = false;
-  for (var i = 0; i < response.data.messages.length; i++) {   
-    // Poll requests can pass each other over the wire, so we can't rely on 
-    // getting a given message once only, so only add if we haven't already
-    // done so.
-    if (response.data.messages[i].cmid > Drupal.settings.chatroom.latestMsgId) {
-      Drupal.settings.chatroom.latestMsgId = response.data.messages[i].cmid;
-      $('#chatroom-board').append(response.data.messages[i].html);
-      newMessage = response.data.messages[i];
+  if (response.data.messages) {
+    var newMessage = false;
+    for (var i = 0; i < response.data.messages.length; i++) {   
+      // Poll requests can pass each other over the wire, so we can't rely on 
+      // getting a given message once only, so only add if we haven't already
+      // done so.
+      if (response.data.messages[i].cmid > Drupal.settings.chatroom.latestMsgId) {
+        Drupal.settings.chatroom.latestMsgId = response.data.messages[i].cmid;
+        $('#chatroom-board').append(response.data.messages[i].html);
+        newMessage = response.data.messages[i];
+        if (response.data.messages[i].newDayHtml) {
+          $('#chatroom-board').append(response.data.messages[i].newDayHtml);
+        }
+      }
     }
-  }
-  if (newMessage) {
-    Drupal.chatroom.scrollToLatestMessage();
-    if (Drupal.settings.chatroom.hasFocus == false) {
-      Drupal.settings.chatroom.newMsg = newMessage;
-      clearInterval(Drupal.settings.chatroom.warnInterval);
-      Drupal.settings.chatroom.warnInterval = setInterval("Drupal.chatroom.warnNewMsgLoop()", 1500);
+    if (newMessage) {
+      Drupal.chatroom.scrollToLatestMessage();
+      if (Drupal.settings.chatroom.hasFocus == false) {
+        Drupal.settings.chatroom.newMsg = newMessage;
+        clearInterval(Drupal.settings.chatroom.warnInterval);
+        Drupal.settings.chatroom.warnInterval = setInterval("Drupal.chatroom.warnNewMsgLoop()", 1500);
+      }
     }
   }
 

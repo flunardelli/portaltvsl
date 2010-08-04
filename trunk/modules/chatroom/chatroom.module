@@ -1,8 +1,8 @@
 <?php
-// $Id: chatroom.module,v 1.63.2.68 2010/03/14 05:39:55 justinrandell Exp $
+// $Id: chatroom.module,v 1.63.2.79 2010/07/10 07:24:33 justinrandell Exp $
 
 require_once dirname(__FILE__) . '/chatroom.forms.inc';
-require_once dirname(__FILE__) . '/chatroom.cache.inc';
+require_once dirname(__FILE__) . '/chatroom.cache.' . variable_get('chatroom_cache_backend', 'apc') . '.inc';
 require_once dirname(__FILE__) . '/chatroom.theme.inc';
 
 /**
@@ -11,7 +11,31 @@ require_once dirname(__FILE__) . '/chatroom.theme.inc';
  */
 
 /**
- * Implementation of hook_help().
+ * Implementation of hook_user().
+ */
+function chatroom_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+    case 'update':
+    case 'delete':
+      chatroom_clear_cached_user($account);
+      break;
+  }
+}
+
+/**
+ * Clear any cache entries for the given $account.
+ * 
+ * @param mixed $account 
+ */
+function chatroom_clear_cached_user(StdClass $account) {
+  $result = db_query("SELECT sid FROM {sessions} WHERE uid = %d", $account->uid);
+  while ($sid = db_result($result)) {
+    chatroom_delete_cached_user($sid);
+  }
+}
+
+/**
+ * Implementation of hook_init().
  */
 function chatroom_init() {
   global $user;
@@ -21,6 +45,9 @@ function chatroom_init() {
       chatroom_chat_notify_user_of_invites($user, $invites);
     }
   }
+  $user->is_chat_admin = $user->uid == 1 || user_access('administer chats');
+  $user->can_access_user_profiles = user_access('access user profiles');
+  $user->chat_timezone_offset = chatroom_get_user_timezone_offset();
 }
 
 /**
@@ -96,6 +123,22 @@ function chatroom_chat_get_user_invites($chat_user) {
     $invites[$invite->cciid] = $invite;
   }
   return $invites;
+}
+
+/**
+ * Implementation of hook_db_rewrite_sql().
+ */
+function chatroom_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
+  $clauses = array();
+  if ($primary_table == 'n' && $primary_field == 'nid') {
+    if (!user_access('access chats')) {
+      $clauses[] = "n.type <> 'chat'";
+    }
+    if (!user_access('access chat rooms')) {
+      $clauses[] = "n.type <> 'chatroom'";
+    }
+  }
+  return count($clauses) ? array('where' => implode(' OR ', $clauses)) : array();
 }
 
 /**
@@ -310,17 +353,18 @@ function chatroom_load_chats($nid) {
   $chats = array();
   $cmids = array();
 
-  $sql = "SELECT cc.*, n.title, 0 last_cmid, 0 msg_count, NULL last_msg
+  $sql = "SELECT cc.*, n.uid, n.title, 0 last_cmid, 0 msg_count, NULL last_msg
           FROM {chatroom_chat} cc
           INNER JOIN {node} n ON n.nid = cc.nid
           WHERE cc.crid = %d";
   $result = db_query($sql, $nid);
   while ($chat = db_fetch_object($result)) {
     $chats[$chat->nid] = $chat;
+    $chats[$chat->nid]->allowed_uids = array($chat->uid);
   }
   
-  // Load the message count info.
   if (!empty($chats)) {
+    // Load the message count info.
     $ccids = array_keys($chats);
     $sql = "SELECT ccid, COUNT(*) msg_count, MAX(cmid) last_cmid
             FROM {chatroom_msg} 
@@ -331,6 +375,14 @@ function chatroom_load_chats($nid) {
       $chats[$count->ccid]->msg_count = $count->msg_count;
       $chats[$count->ccid]->last_cmid = $count->last_cmid;
       $cmids[] = $count->last_cmid;
+    }
+
+    // Load the allowed users for each chat.
+    $sql = "SELECT nid, uid
+            FROM {chatroom_chat_user} 
+            WHERE nidd IN (" . db_placeholders($ccids) . ")";
+    while ($allowed_user = db_fetch_object($result)) {
+      $chats[$allowed_user->nid]->allowed_uids = $allowed_user->uid;
     }
   }
 
@@ -361,19 +413,20 @@ function chatroom_chat_insert($node) {
   cache_clear_all('chatroom_chat_list', 'cache');
   $chat = array(
     'nid' => $node->nid,
-    'crid' => $node->chatroom_nid,
-    'poll_freq' => $node->poll_freq,
-    'idle_freq' => $node->idle_freq,
-    'max_users' => $node->max_users,
-    'kicked_out_message' => $node->kicked_out_message,
-    'banned_message' => $node->banned_message,
+    'crid' => isset($node->chatroom_nid) ? $node->chatroom_nid : 0,
+    'poll_freq' => isset($node->poll_freq) ? $node->poll_freq : 1,
+    'idle_freq' => isset($node->idle_freq) ? $node->idle_freq : 20,
+    'max_users' => isset($node->max_users) ? $node->max_users : 0,
+    'kicked_out_message' => isset($node->kicked_out_message) ? $node->kicked_out_message : '',
+    'banned_message' => isset($node->banned_message) ? $node->banned_message : '',
     'module' => isset($node->module) ? $node->module : 'chatroom',
-    'previous_messages_display_count' => $node->previous_messages_display_count,
+    'previous_messages_display_count' => isset($node->previous_messages_display_count) ? $node->previous_messages_display_count : 20,
     'private' => isset($node->private) ? $node->private : 0,
     'profile_picture' => isset($node->profile_picture) ? $node->profile_picture : '',
     'imagecache_preset' => isset($node->imagecache_preset) ? $node->imagecache_preset : '',
   );
   drupal_write_record('chatroom_chat', $chat);
+  chatroom_chat_update_cache($node->nid, 0);
 }
 
 /**
@@ -421,6 +474,8 @@ function chatroom_chat_delete(&$node) {
   db_query('DELETE FROM {chatroom_chat_online_list} WHERE ccid = %d', $node->nid);
   db_query('DELETE FROM {chatroom_chat_ban_list} WHERE nid = %d', $node->nid);
   db_query('DELETE FROM {chatroom_chat_kicked_list} WHERE nid = %d', $node->nid);
+  $cache_file = file_directory_temp() . '/chatroom.chat.' . $node->nid . '.cache';
+  unlink($cache_file);
 }
 
 /**
@@ -507,6 +562,14 @@ function chatroom_view($node, $teaser = FALSE, $page = FALSE) {
         $archived_count = 0;
         $open_count = 0;
         foreach ($node->chatroom->chats as $chat) {
+          if ($chat->private) {
+            if (in_array($user->uid, $chat->allowed_uids)) {
+              $chat->title .= ' (Private)';
+            }
+            else {
+              continue;
+            }
+          }
           if ($chat->when_archived) {
             $rows['archived'][$archived_count] = array(
               array('data' => l($chat->title, "node/$chat->nid")),
@@ -863,6 +926,7 @@ function chatroom_add_js($node) {
     'postMessagePath' => 'chatroom/chat/post/message',
     'banUserPath' => 'chatroom/ajax/user/ban',
     'kickUserPath' => 'chatroom/ajax/user/kick',
+    'removeUserPath' => 'chatroom/ajax/user/remove',
     'chatPath' => 'node/' . $node->nid,
 		'successiveCacheHits' => 0,
     'skipCacheCheckCount' => 5,
@@ -1036,7 +1100,7 @@ function chatroom_is_banned_user($node) {
 function chatroom_chat_get_latest_messages($node, $last_msg_id, $command_response = FALSE) {
   global $user;
 
-  if ($node->chat->private && $node->uid != $user->uid && !in_array($user->uid, $node->chat->allowed_uids)) {
+  if (!chatroom_chat_user_has_access($node, $user)) {
     drupal_json(array('data' => array('accessDenied' => 'kicked', 'messages' => array())));
     return;
   }
@@ -1055,6 +1119,9 @@ function chatroom_chat_get_latest_messages($node, $last_msg_id, $command_respons
     $cached_chat_user = (object) array(
       'uid' => $user->uid,
       'allowed_chats' => array(),
+      'is_chat_admin' => $user->is_chat_admin,
+      'can_access_user_profiles' => $user->can_access_user_profiles,
+      'chat_timezone_offset' => $user->chat_timezone_offset,
     );
   }
   if (!in_array($node->nid, $cached_chat_user->allowed_chats)) {
@@ -1075,14 +1142,26 @@ function chatroom_chat_get_latest_messages($node, $last_msg_id, $command_respons
     foreach (chatroom_chat_load_messages($node->nid, $last_msg_id) as $message) {
       $save_to_cache = TRUE;
       $msg = new StdClass();
-      $msg->html = theme('chatroom_message', $message, $node);
+      $msg->html = chatroom_chat_get_themed_message($message, $node);
       $msg->text = strip_tags($message->msg);
       $msg->name = $message->name;
       $msg->cmid = $message->cmid;
       $msg->type = $message->msg_type;
       $msg->uid = $message->uid;
+      $msg->modified = $message->modified;
+      $msg->date_format = variable_get('chatroom_msg_date_format', 'H:i:s');
+      $msg->public_css_class = variable_get('chatroom_msg_public_class', 'chatroom-msg');
+      $msg->private_css_class = variable_get('chatroom_msg_private_class', 'chatroom-private');
+      $msg->themed_username = theme('chatroom_message_username', $message, TRUE);
+      $msg->themed_message = theme('chatroom_message', $message, $node);
       $msg->recipient_uid = $message->recipient_uid;
+      $msg->viewed_uid = $user->uid;
+
+      // Store everything in the cache, we'll run an access check when we pull
+      // the messages out.
       $message_cache[$msg->cmid] = $msg;
+
+      // Don't send private messages to anyone accept the intended recipient.
       if ($message->msg_type == 'private_message' && $user->uid != $message->recipient_uid) {
         continue;
       }
@@ -1106,6 +1185,50 @@ function chatroom_chat_get_latest_messages($node, $last_msg_id, $command_respons
 }
 
 /**
+ * Wrapper around theme('chatroom_message').
+ * 
+ * @param mixed $message 
+ * @param mixed $node 
+ */
+function chatroom_chat_get_themed_message($message, $node) {
+  if ($message->uid && user_access('access user profiles')) {
+    $username = theme('chatroom_message_username', $message);
+  }
+  else {
+    $username = $message->name;
+  }
+  $public_css_class = variable_get('chatroom_msg_public_class', 'chatroom-msg');
+  $private_css_class = variable_get('chatroom_msg_private_class', 'chatroom-private');
+  $class = "new-message $public_css_class" . ($message->msg_type == 'private_message' ? " $private_css_class" : '');
+  $output = '<div class="' . $class . '">';
+  $output .= '(' . chatroom_get_message_time_string($message->modified) . ') <strong>' . $username . ':</strong> ';
+  $output .= theme('chatroom_message', $message, $node);
+  $output .= "</div>";
+  return $output;
+}
+
+/**
+ * Get the time string for a message from a UTC timestamp. 
+ * 
+ * @param mixed $timestamp 
+ * @return string
+ */
+function chatroom_get_message_time_string($timestamp) {
+  $date = new DateTime('@' . ($timestamp + chatroom_get_user_timezone_offset()));
+  return $date->format(variable_get('chatroom_msg_date_format', 'H:i:s'));
+}
+
+/**
+ * Return a UTC timestamp.
+ * 
+ * @return int timestamp
+ */
+function chatroom_get_utc_timestamp() {
+  $date = new DateTime('now', new DateTimeZone('UTC'));
+  return $date->format('U');
+}
+
+/**
  * Posted messages are handled here.
  * 
  * @return void
@@ -1118,7 +1241,7 @@ function chatroom_chat_post_message($node, $last_msg_id) {
     exit;
   }
 
-  if ($node->chat->private && $node->uid != $user->uid && !in_array($user->uid, $node->chat->allowed_uids)) {
+  if (!chatroom_chat_user_has_access($node, $user)) {
     drupal_json(array('data' => array('accessDenied' => 'kicked', 'messages' => array())));
     return;
   }
@@ -1132,7 +1255,6 @@ function chatroom_chat_post_message($node, $last_msg_id) {
     print drupal_json(array('data' => array('accessDenied' => 'kicked', 'messages' => array())));
     return;
   }
-
   $message = array(
     'ccid' => $node->chat->nid, 
     'uid' => $user->uid, 
@@ -1140,7 +1262,7 @@ function chatroom_chat_post_message($node, $last_msg_id) {
     'sid' => session_id(), 
     'msg_type' => chatroom_chat_get_message_type($_POST['message']),
     'recipient_uid' => 0, 
-    'modified' => time(),
+    'modified' => chatroom_get_utc_timestamp(),
   );
   if ($message['msg_type'] == 'command') {
     $result = chatroom_chat_call_command($message, $node);
@@ -1149,6 +1271,19 @@ function chatroom_chat_post_message($node, $last_msg_id) {
     $result = chatroom_chat_save_message($message, $node);
   }
   chatroom_chat_get_latest_messages($node, $last_msg_id, $result);
+}
+
+/**
+ * Return the current user's offset from UTC.
+ */
+function chatroom_get_user_timezone_offset() {
+  global $user;
+
+  $offset = variable_get('date_default_timezone', 0);
+  if (variable_get('configurable_timezones', TRUE) && isset($user->timezone)) {
+    $offset = $user->timezone;
+  }
+  return $offset;
 }
 
 /**
@@ -1595,7 +1730,7 @@ function chatroom_get_popout_params($node) {
  * @return boolean
  */
 function chatroom_chat_user_has_access($node, $account) {
-  if ($node->chat->private && $node->uid != $account->uid && !user_access('administer chats')) {
+  if ($node->chat->private && $node->uid != $account->uid && !user_access('administer chats', $account)) {
     $sql = "SELECT uid FROM {chatroom_chat_user} WHERE nid = %d AND uid = %d";
     return db_result(db_query($sql, $node->nid, $account->uid));
   }
@@ -1672,12 +1807,26 @@ function chatroom_chat_ajax_user_remove($node) {
   global $user;
   
   // No point if we don't have a valid user.
-  if (!isset($_POST['uid']) || !$chat_user = user_load($_POST['uid'])) {
+  if (!isset($_POST['uid'])) {
+    return;
+  }
+  
+  if (is_numeric($_POST['uid'])) {
+    $uid = $_POST['uid'];
+  }
+  elseif (preg_match('/^chatroom_user_(\d+)$/', $_POST['uid'], $matches)
+    || preg_match('/^chatroom_user_guest-(\d+)$/', $_POST['uid'], $matches)) {
+    $uid = $matches[1];
+  }
+  
+  if (!$chat_user = user_load($uid)) {
     return;
   }
   
   if (chatroom_chat_user_remove($chat_user, $user, $node)) {
-    drupal_json(array('data' => array('userRemoved' => $chat_user->uid)));
+    $result['userRemoved'] = $chat_user->uid;
+    $result['commandResponse']->msg = t("User %username was removed from chat.", array('%username' => $chat_user->name));
+    drupal_json(array('data' => $result));
   }
 }
 
@@ -1741,6 +1890,12 @@ function chatroom_chat_save_invite($invitee, $inviter, $node) {
   if ($node->chat->private && !($node->uid == $inviter->uid || user_access('administer chats', $inviter))) {
     return FALSE;
   }
+  
+  // Make sure that the user can access the chat if its private.
+  if ($node->chat->private) {
+    $user_data = array('uid' => $invitee->uid, 'nid' => $node->nid);
+    drupal_write_record('chatroom_chat_user', $user_data);
+  }
 
   $user_data = array(
     'inviter_uid' => $inviter->uid, 
@@ -1794,7 +1949,7 @@ function chatroom_chat_get_user_links($node, $users) {
   $links[] = chatroom_chat_user_link(t('Ban user'), 'ban-user', array('attributes' => array('class' => 'chatroom-ban-user-link')));
   $links[] = chatroom_chat_user_link(t('Kick user'), 'kick-user', array('attributes' => array('class' => 'chatroom-kick-user-link')));
   if ($node->chat->private) {
-    $links[] = chatroom_chat_user_link(t('Remove user'), 'remove-user');
+    $links[] = chatroom_chat_user_link(t('Remove user'), 'remove-user', array('attributes' => array('class' => 'chatroom-remove-user-link')));
   }
 
   foreach (module_implements('chatroom_user_links') as $module) {
@@ -1854,12 +2009,12 @@ function chatroom_chat_ajax_user_ban($node) {
   }
 
   $result = array('messages' => array(), 'commandResponse' => new StdClass());
-  if (preg_match('/^chatroom_user_(\d)+$/', $_POST['uid'], $matches) && $user_to_ban = user_load($matches[1])) {
+  if (preg_match('/^chatroom_user_(\d+)$/', $_POST['uid'], $matches) && $user_to_ban = user_load($matches[1])) {
     chatroom_chat_ban_user($node, $user_to_ban, $user);
     $result['commandResponse']->msg = t("User %username banned from chat.", array('%username' => $user_to_ban->name));
     drupal_json(array('data' => $result));
   }
-  elseif (preg_match('/^chatroom_user_guest-(\d)+$/', $_POST['uid'], $matches)) {
+  elseif (preg_match('/^chatroom_user_guest-(\d+)$/', $_POST['uid'], $matches)) {
     // You can't really ban a guest, but anyway...
     chatroom_chat_kick_guest($node, $matches[1], $user);
     $result['commandResponse']->msg = t("Guestr %guest kicked out of chat.", array('%guest' => $matches[1]));
@@ -1884,12 +2039,12 @@ function chatroom_chat_ajax_user_kick($node) {
   }
 
   $result = array('messages' => array(), 'commandResponse' => new StdClass());
-  if (preg_match('/^chatroom_user_(\d)+$/', $_POST['uid'], $matches) && $user_to_kick = user_load($matches[1])) {
+  if (preg_match('/^chatroom_user_(\d+)$/', $_POST['uid'], $matches) && $user_to_kick = user_load($matches[1])) {
     chatroom_chat_kick_user($node, $user_to_kick, $user);
     $result['commandResponse']->msg = t("User %username kicked out of chat.", array('%username' => $user_to_kick->name));
     drupal_json(array('data' => $result));
   }
-  elseif (preg_match('/^chatroom_guest_(\d)+$/', $_POST['uid'], $matches)) {
+  elseif (preg_match('/^chatroom_guest_(\d+)$/', $_POST['uid'], $matches)) {
     chatroom_chat_kick_guest($node, $matches[1], $user);
     $result['commandResponse']->msg = t("Guestr %guest kicked out of chat.", array('%guest' => $matches[1]));
     drupal_json(array('data' => $result));
